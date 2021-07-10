@@ -1,0 +1,26 @@
+{
+    "Prefix":"f/",
+    "Creator_id":"373145038458454017",
+    "Creator_text":"Feri#8256",
+    "Invite_link":"://discord.gg/",
+    "Default_cooldown":5000,
+    "Emoji_BaseUrl":"https://cdn.discordapp.com/emojis/",
+    "Bot_invite":"https://discord.com/api/oauth2/authorize?client_id=697160467914948738&permissions=268758086&scope=bot",
+    "Bot_support_server_invite":"https://discord.gg/WZZGjB3",
+
+    "Hug_GIF_API":"https://v2.api.acsanad.net/images/hug",
+    "Hug_GIF_API_Property":"url",
+
+    "Pat_GIF_API":"https://v2.api.acsanad.net/images/pat",
+    "Pat_GIF_API_Property":"url",
+
+    "Cuddle_GIF_API":"https://v2.api.acsanad.net/images/cuddle",
+    "Cuddle_GIF_API_Property":"url",
+
+    "Kiss_GIF_API":"https://v2.api.acsanad.net/images/kiss",
+    "Kis_GIF_API_Property":"url",
+
+    "Slap_GIF_API":"https://v2.api.acsanad.net/images/slap",
+    "Slap_GIF_API_Property":"url"
+
+}

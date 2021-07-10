@@ -1,0 +1,5 @@
+node_modules/
+.env
+data/
+error.log
+process_exit.log
