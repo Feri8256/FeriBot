@@ -27,19 +27,19 @@ module.exports = {
             let reward = 0;
 
             if (RouletteDifference === 0) { //1
-                message.reply(`🎉 | **${L.RouletteGameText1}**\n${Language[langSetting].YourReward}: **${RouletteMaxPoints}** ${Language[langSetting].Cookies}! 🍪`);
+                message.reply(`🎉 | **${L.RouletteGameText1}**\n${L.YourReward}: **${RouletteMaxPoints}** ${L.Cookies}! 🍪`);
                 reward = CoinBefore + RouletteMaxPoints;
             }
             else if (RouletteDifference >= 1 && RouletteDifference <= 5) { //2
-                message.reply(`**${L.RouletteGameText2}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${Language[langSetting].YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${Language[langSetting].Cookies}! 🍪`);
+                message.reply(`**${L.RouletteGameText2}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${L.YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${L.Cookies}! 🍪`);
                 reward = CoinBefore + ((RouletteMaxPoints/2) - RouletteDifference);
             }
             else if (RouletteDifference >= 6 && RouletteDifference <= 10) { //3
-                message.reply(`**${L.RouletteGameText3}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${Language[langSetting].YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${Language[langSetting].Cookies}! 🍪`);
+                message.reply(`**${L.RouletteGameText3}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${L.YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${L.Cookies}! 🍪`);
                 reward = CoinBefore + ((RouletteMaxPoints/2) - RouletteDifference);
             }
             else if (RouletteDifference >= 11 && RouletteDifference <= 19) { //4
-                message.reply(`**${L.RouletteGameText4}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${Language[langSetting].YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${Language[langSetting].Cookies}! 🍪`);
+                message.reply(`**${L.RouletteGameText4}**\n${L.RouletteGameTextNumWas}: **${RouletteRdmNum}**\n${L.RouletteGameTextDifference}: **${RouletteDifference}**\n${L.YourReward}: **${RouletteMaxPoints - RouletteDifference}** ${L.Cookies}! 🍪`);
                 reward = CoinBefore + ((RouletteMaxPoints/2) - RouletteDifference);
             }
             else if (RouletteDifference >= 20 && RouletteDifference <= 40) { //5
