@@ -13,7 +13,7 @@ module.exports = {
             HelpCategories.setColor('#f7f7f7')
             HelpCategories.setDescription(L.HelpText1)
             HelpCategories.addFields(
-                { name: L.HelpCategoriesTitle, value: `\`${client.prefix}help animals\`\n\`${client.prefix}help fun\`\n\`${client.prefix}help games\`\n\`${client.prefix}help math\`\n\`${client.prefix}help mod\`\n\`${client.prefix}help it\`\n\`${client.prefix}help info\`\n\`${client.prefix}help misc\`` },
+                { name: L.HelpCategoriesTitle, value: `\`${client.prefix}help animals\`\n\`${client.prefix}help fun\`\n\`${client.prefix}help games\`\n\`${client.prefix}help mod\`\n\`${client.prefix}help info\`\n\`${client.prefix}help misc\`` },
                 { name: 'More about language setting:', value: `\`${client.prefix}language\`` },
                 { name: L.BotInvitesText, value: `[${L.BotInviteTextLink}](${variables.Bot_invite})${variables.Bot_support_server_invite ? ` • [${L.BotSupportServerTextLink}](${variables.Bot_support_server_invite})` : ''}` },
             )
@@ -33,7 +33,7 @@ module.exports = {
             let CategoryL = CategoryArr.length;
 
             if (CategoryL === 0) {
-                message.reply(`🤷‍♂️ | ${L.UnknownHelpCategory}`)
+                message.reply(L.UnknownHelpCategory)
                 return;
             }
 

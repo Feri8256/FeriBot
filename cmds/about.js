@@ -12,8 +12,6 @@ module.exports = {
         SystemEmbed.setColor('#5555ff')
         SystemEmbed.setTitle(L.AboutBotTitle)
         SystemEmbed.addFields(
-            { name: L.AboutBotName, value: client.user.username, inline: true },
-            { name: L.AboutBotCreator, value: 'Feri#8256', inline: true },
             { name: L.AboutBotGuilds, value: client.guilds.cache.size, inline: true },
             { name: L.AboutBotGuildChannels, value: client.channels.cache.size, inline: true },
             { name: L.AboutBotUsers, value: client.users.cache.size, inline: true },

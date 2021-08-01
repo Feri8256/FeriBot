@@ -1,8 +1,5 @@
 {
     "Prefix":"f/",
-    "Creator_id":"373145038458454017",
-    "Creator_text":"Feri#8256",
-    "Invite_link":"://discord.gg/",
     "Default_cooldown":5000,
     "Emoji_BaseUrl":"https://cdn.discordapp.com/emojis/",
     "Bot_invite":"https://discord.com/api/oauth2/authorize?client_id=697160467914948738&permissions=268758086&scope=bot",

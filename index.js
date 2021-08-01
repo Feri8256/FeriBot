@@ -55,14 +55,12 @@ const cmdQuizGameListen = require('./auto/QuizGameListenV2');
 const autoRoleAction = require('./auto/autoRoleAction');
 const memberWelcome = require('./auto/memberWelcome');
 const memberLeave = require('./auto/memberLeave');
-const modInvites = require('./auto/filter-invites');
 const pingMe = require('./auto/pingme');
 const shoutingDetector = require('./auto/shoutingMessageDetector');
 const emoteStatCollector = require('./auto/emoteStatCollector');
 const wordGameListen = require('./auto/WordGameListen')
 
 const CoolDown = new Set();
-client.OngoingTimers = new Set();
 client.GuessGame = new Map();
 client.GuessTries = new Map();
 client.QuizGamePlayer = new Map();
@@ -121,7 +119,6 @@ client.on('message', async message => {
     let L = Language[Ls];
 
     shoutingDetector(message, DataMgr);
-    modInvites(message, L, variables, DataMgr);
     cmdReactionTo(message);
     pingMe(message, L, client);
     emoteStatCollector(message, false);
@@ -150,7 +147,6 @@ client.on('message', (message) => {
         
     //Ha a chkCmd null, akkor azt jelenti, nincs meg az, amit kerestünk...
     if (!chkCmd) {
-        message.react('❌');
         return;
     }
     else {
