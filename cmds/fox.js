@@ -11,7 +11,7 @@ module.exports = {
         if (args[1]) {
             let numberInput = parseInt(args[1]);
             if (isNaN(numberInput) ||
-                numberInput > maxLength ||
+                numberInput >= maxLength ||
                 numberInput <= 0
             ) {
                 rdmFoxNum = Math.floor(Math.random() * maxLength);
@@ -28,7 +28,7 @@ module.exports = {
         FoxEmbed.setColor('#d86716')
         FoxEmbed.setImage(foxImgLink.foxes[rdmFoxNum])
         FoxEmbed.setTimestamp()
-        FoxEmbed.setFooter(`${L.ImageNumber}: ${rdmFoxNum}`)
+        FoxEmbed.setFooter(`#${rdmFoxNum}`)
     
         message.channel.send(FoxEmbed)
     }

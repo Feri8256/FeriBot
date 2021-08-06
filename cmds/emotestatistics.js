@@ -75,10 +75,10 @@ module.exports = {
                     emoteStatsEmbed = new Discord.MessageEmbed()
                     let sortedData = parsedData.sort(function(a,b){
                         return a.occurrances - b.occurrances;
-                    }).reverse().slice(0,19);
+                    }).reverse().slice(0,10);
     
                     emoteStatsEmbed.setTitle(L.EmoteStatsMostUsed)
-                    emoteStatsEmbed.setDescription('top-20')
+                    emoteStatsEmbed.setDescription('top-10')
                     
                     let listText = '';
                     for (var e of sortedData) {
