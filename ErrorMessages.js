@@ -36,7 +36,7 @@ exports.W_CooldownWait = (L) => {
     return CooldownWait;
 };
 
-exports.W_UsrNoPermission = (Language, langSetting) => {
+exports.W_UsrNoPermission = (L) => {
     let UsrNoPermission = new Discord.MessageEmbed()
     UsrNoPermission.setColor('#ff0000')
     UsrNoPermission.setTitle(`❌ ${L.UserNoPermissionTitle}`)
@@ -45,7 +45,7 @@ exports.W_UsrNoPermission = (Language, langSetting) => {
     return UsrNoPermission;
 };
 
-exports.W_BotNoPermisson = (Language, langSetting) => {
+exports.W_BotNoPermisson = (L) => {
     let BotNoPermission = new Discord.MessageEmbed()
     BotNoPermission.setColor('#ff0000')
     BotNoPermission.setTitle(`❌ ${L.BotNoPermissionTitle}`)

@@ -1,7 +1,6 @@
 //Legelső Discord bot próbálkozásom. Elkezdtem: 2020.04.07
 
 require('dotenv').config();
-require('./keepAlive');
 const Discord = require('discord.js');
 const client = new Discord.Client({
     disableMentions: "everyone"
@@ -108,8 +107,6 @@ function CmdExecuted () {
 
 //Automatikus dolgok
 client.on('message', async message => {
-    if (message.author.id === '829612013956104234' && message.content === 'Szervusz! 🦊') message.reply('Szia! 👋🏼🦊'); //Ádám botjának válasz
-    
     if (message.guild === null) return; //Ha az üzenet DM-ként érkezik, akkor nincs guild, tehát ne csinálj semmit, különben hibával leállsz.
     if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
     if (message.author.bot) return; //Ha az üzenet küldője bot, akkor ne csinálj semmit!
