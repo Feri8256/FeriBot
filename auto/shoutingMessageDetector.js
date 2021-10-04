@@ -1,12 +1,14 @@
-const CapitalLetterRegExp = /[A-Z\ +\/]{10,}/
+const capsTestPrimary = /[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝŰŐ\ +\/]{10,}/g
 
 module.exports = (message, DataMgr) => {
-    let msgContent = message.content;
+    let msg = message.content;
 
-    if (CapitalLetterRegExp.test(msgContent)) {
-        let testRead = DataMgr.Read(`./data/${message.guild.id}`,'caps')
-        if (testRead != null && testRead === '1') {
-            message.delete();
+    if (capsTestPrimary.test(msg)) {
+        let d = DataMgr.Read(`./data/${message.guild.id}`,'caps');
+
+        if (d != null && d != undefined) {
+            let capsTestSecondary = new RegExp("[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝŰŐ\\ +\\/]{" + d + ",}", "g");
+            if (capsTestSecondary.test(msg)) message.delete();
         }
     }
 }

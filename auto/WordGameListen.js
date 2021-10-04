@@ -80,19 +80,19 @@ module.exports = (client, message, DataMgr, L) => {
                 break;
 
             case 'h':
-                if (wgPlayerHints === 0) {
+                if (isNaN(wgPlayerHints) || wgPlayerHints <= 0) {
                     message.reply(L.WordGameNoHelping);
                     client.wordGamePlayerHints.delete(wgPlayerID);
                 }
                 else {
-                    message.reply(L.WordGameHelping.replace('{0}', giveRandomHint(wgPlayerData.normalWord)));
+                    wgPlayerHints--
+                    message.reply(L.WordGameHelping.replace('{0}', giveRandomHint(wgPlayerData.normalWord)).replace('{1}', wgPlayerHints));
+                    client.wordGamePlayerHints.set(wgPlayerID, wgPlayerHints);
                 }
-                wgPlayerHints--
-                client.wordGamePlayerHints.set(wgPlayerID, wgPlayerHints);
                 break;
 
             default:
-                if (msgContent.length < wgPlayerData.normalWord.length || msgContent.length > wgPlayerData.normalWord.length) return;
+                if (msgContent.length < wgPlayerData.normalWord.length-2 || msgContent.length > wgPlayerData.normalWord.length) return;
                 if (msgContent === wgPlayerData.normalWord.toLowerCase() && wgPlayerTries > 0) {
                     let reward = wgPlayerTries * 10;
                     message.reply(L.WordGameCorrect.replace('{0}', reward));
