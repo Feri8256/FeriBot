@@ -1,5 +1,5 @@
-const QuizGameAsk = require('../auto/QuizGameAsk');
-const findLanguage = require('../findLanguage');
+const QuizGameAsk = require('../../auto/QuizGameAsk');
+const findLanguage = require('../../findLanguage');
 module.exports = {
     name:'quiz',
     categories: ['games'],

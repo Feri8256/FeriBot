@@ -1,5 +1,5 @@
 const { Util } = require('discord.js');
-const variables = require('../variables.json');
+const variables = require('../../variables.json');
 module.exports = {
     name: 'emote',
     categories: ['misc'],

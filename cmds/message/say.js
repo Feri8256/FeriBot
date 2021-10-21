@@ -1,4 +1,4 @@
-const blackListWords = require('../json/do-not-say-list.json');
+const blackListWords = require('../../json/do-not-say-list.json');
 
 module.exports = {
     name:'say',

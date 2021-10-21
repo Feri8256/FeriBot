@@ -4,7 +4,7 @@ module.exports = {
     categories: ['animals'],
     description: ['Képet küld farkasokról', 'Sends a wolf picture.'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        let wolfImgLink = require('../json/animals/wolf-images.json');
+        let wolfImgLink = require('../../json/animals/wolf-images.json');
         let rdmWolfNum = Math.floor(Math.random() * wolfImgLink.wolves.length);
     
         const WolfEmbed = new Discord.MessageEmbed()

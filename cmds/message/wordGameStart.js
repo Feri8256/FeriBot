@@ -1,5 +1,5 @@
-const arrShuffle = require('../auto/module-arrayShuffle');
-const findLanguage = require('../findLanguage');
+const arrShuffle = require('../../auto/module-arrayShuffle');
+const findLanguage = require('../../findLanguage');
 module.exports = {
     name:'word',
     //aliases: ['farkas', 'awoo'],
@@ -12,7 +12,7 @@ module.exports = {
             message.reply(L.WordGameNewNo);
         }
         else {
-            let wordList = require(`../json/words-${findLanguage(client, message.guild.id)}.json`);
+            let wordList = require(`../../json/words-${findLanguage(client, message.guild.id)}.json`);
             let rdmWordNum = Math.floor(Math.random() * wordList.length);
     
             let shWord = arrShuffle(wordList[rdmWordNum]).join('');

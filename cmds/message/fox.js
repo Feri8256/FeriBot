@@ -4,7 +4,7 @@ module.exports = {
     categories: ['animals'],
     description: ['Képet küld rókákról.', 'Sends a fox picture.'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        let foxImgLink = require('../json/animals/fox-images.json');
+        let foxImgLink = require('../../json/animals/fox-images.json');
         let maxLength = foxImgLink.foxes.length
         let rdmFoxNum = 0;
 

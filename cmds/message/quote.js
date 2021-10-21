@@ -1,5 +1,5 @@
 const fs = require('fs');
-const findLanguage = require('../findLanguage');
+const findLanguage = require('../../findLanguage');
 module.exports = {
     name:'quote',
     categories: ['fun'],
@@ -8,7 +8,7 @@ module.exports = {
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
         let langSetting = findLanguage(client, message.guild.id);
 
-        let idezetek = require(`../json/idezetek-${langSetting}.json`);
+        let idezetek = require(`../../json/idezetek-${langSetting}.json`);
         let rdmIdezetNum = Math.floor(Math.random() * idezetek.length);
     
         let QuoteEmbed = new Discord.MessageEmbed()

@@ -1,4 +1,4 @@
-const shuffle = require('../auto/module-arrayShuffle');
+const shuffle = require('../../auto/module-arrayShuffle');
 
 module.exports = {
     name: 'shuffle',

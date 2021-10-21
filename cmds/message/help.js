@@ -1,5 +1,5 @@
-const findLanguage = require('../findLanguage');
-const variables = require('../variables.json')
+const findLanguage = require('../../findLanguage');
+const variables = require('../../variables.json')
 module.exports = {
     name: 'help',
     aliases: ['commands', 'parancsok', 'segítség'],

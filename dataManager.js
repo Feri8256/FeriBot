@@ -32,11 +32,11 @@ exports.Read = (path, key) => {
 exports.Write = (path, key, value) => {
     if(path && key && value){
         if(fs.pathExistsSync(path+"/")){
-            fs.writeFileSync(path+"/"+key, value);
+            fs.writeFileSync(path+"/"+key, value.toString());
         }
         else{
             fs.ensureDir(path, 0o2775);
-            fs.writeFileSync(path+"/"+key, value);
+            fs.writeFileSync(path+"/"+key, value.toString());
         }
     }
     else{
@@ -108,11 +108,11 @@ exports.Exists = (path, key) => {
 exports.Append = (path, key, value) => {
     if(path && key && value){
         if(fs.pathExistsSync(path+"/")){
-            fs.appendFileSync(path+"/"+key, value);
+            fs.appendFileSync(path+"/"+key, value.toString());
         }
         else{
             fs.ensureDir(path, 0o2775);
-            fs.appendFileSync(path+"/"+key, value);
+            fs.appendFileSync(path+"/"+key, value.toString());
         }
     }
     else{

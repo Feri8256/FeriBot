@@ -18,11 +18,14 @@ const DataMgr = require('./dataManager');
 const findLanguage = require('./findLanguage');
 const Language = require('./languages.json');
 
+const messageCommandsPath = './cmds/message';
+const slashCommandPath = '';
+
 //Parancs betöltő
-let CmdFiles = fs.readdirSync('./cmds');
+let CmdFiles = fs.readdirSync(messageCommandsPath);
 for (const f of CmdFiles) {
     console.log(f);
-    const rCmdF = require(`./cmds/${f}`);
+    const rCmdF = require(`${messageCommandsPath}/${f}`);
     client.cmds.set(rCmdF.name, rCmdF);
 }
 
@@ -72,7 +75,8 @@ client.wordGamePlayerHints = new Map();
 client.on('ready', () => {
     console.clear();
     console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nParancsok: ${CmdFiles.length}`);
-    client.user.setActivity(`${prefix}help | ${prefix}segítség`, {type: 'LISTENING'});
+    //client.user.setActivity(`${prefix}help | ${prefix}segítség`, {type: 'LISTENING'});
+    client.user.setStatus('invisible');
 });
 
 //Eltávolítanak egy szerverről
