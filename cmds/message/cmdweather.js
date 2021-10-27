@@ -37,10 +37,10 @@ module.exports = {
                         WeatherEmbed.setTimestamp();
                         WeatherEmbed.setFooter('weather-js')
     
-                        message.channel.send(WeatherEmbed);
+                        message.channel.send({embeds: [WeatherEmbed]});
                     }
                     else {
-                        message.channel.send(ErrMessages.E_InvalidAPIRes(L));
+                        message.channel.send({embeds: [ErrMessages.E_InvalidAPIRes(L)]});
                     }
                 })
                 

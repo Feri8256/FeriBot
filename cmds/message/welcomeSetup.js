@@ -12,7 +12,7 @@ module.exports = {
                 case 'reset':
                     //visszaállít, töröl
                     DataMgr.Delete(`./data/${guildID}`, 'welcome');
-                    message.reply(`☑ | ${L.WelcomeRemoved}`);
+                    message.reply({content: `☑ | ${L.WelcomeRemoved}`});
                 break;
             
             default:
@@ -22,11 +22,11 @@ module.exports = {
                     let customMessageInput   =   args.slice(2, args.length);
                     let customMessage =   customMessageInput.slice(0, 255).join(' ');
                     DataMgr.Write(`./data/${guildID}`,'welcome', mentionedChannel.id + ';' + customMessage);
-                    message.reply(`☑ | ${L.WelcomeAdded}`);
+                    message.reply({content: `☑ | ${L.WelcomeAdded}`});
                 }
                 else{
                     //érvénytelen
-                    message.channel.send(ErrMessages.E_InvalidArgs(L));
+                    message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
                 }
             }
     }

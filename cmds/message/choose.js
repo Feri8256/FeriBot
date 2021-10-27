@@ -11,10 +11,10 @@ module.exports = {
             let OptionsArray = ChooseOptions.split('/');
             let RdmOptions = Math.floor(Math.random() * OptionsArray.length);
     
-            message.channel.send(`${L.ChooseChoice}: **${OptionsArray[RdmOptions]}**`);
+            message.channel.send({content: `${L.ChooseChoice}: **${OptionsArray[RdmOptions]}**`});
         }
         else {
-            message.channel.send(L.ChooseUse);
+            message.channel.send({content: L.ChooseUse});
         }
     }
 }

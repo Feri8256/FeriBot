@@ -16,12 +16,12 @@ module.exports = {
                 antiCapsEmbed.setTitle('Anti-Caps')
                 antiCapsEmbed.setColor('#00FF00')
                 antiCapsEmbed.setDescription(L.AntiCapsDisabled)
-                message.channel.send(antiCapsEmbed);
+                message.channel.send({embeds: [antiCapsEmbed]});
                 break;
 
             default:
                 if (isNaN(capsSetting) || capsSetting < 10 || capsSetting > 100) {
-                    message.channel.send(ErrMessages.E_InvalidArgs(L));
+                    message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
                 }
                 else {
                     DataMgr.Write(`./data/${message.guild.id}`,'caps', String(capsSetting));
@@ -29,7 +29,7 @@ module.exports = {
                     antiCapsEmbed.setTitle('Anti-Caps')
                     antiCapsEmbed.setColor('#00FF00')
                     antiCapsEmbed.setDescription(L.AntiCapsEnabled.replace('{0}', capsSetting))
-                    message.channel.send(antiCapsEmbed);
+                    message.channel.send({embeds: [antiCapsEmbed]});
                 }
         }
     }

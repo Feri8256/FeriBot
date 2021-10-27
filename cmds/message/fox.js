@@ -30,6 +30,6 @@ module.exports = {
         FoxEmbed.setTimestamp()
         FoxEmbed.setFooter(`#${rdmFoxNum}`)
     
-        message.channel.send(FoxEmbed)
+        message.channel.send({embeds: [FoxEmbed]})
     }
 }

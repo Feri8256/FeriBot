@@ -54,7 +54,7 @@ module.exports = (message) => {
             ];
 
             let rdmWelcome = Math.floor(Math.random() * (welcomeText.length * 1));
-            message.channel.send(`**${welcomeText[rdmWelcome]} ${message.author.username}!** 👋🏼😄`);
+            message.channel.send({content: `**${welcomeText[rdmWelcome]} ${message.author.username}!** 👋🏼😄`});
         }
     }
 };

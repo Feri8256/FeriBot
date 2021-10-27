@@ -4,14 +4,14 @@ module.exports = (message, L, client, DataMgr) => {
     if (client.GuessGame.has(PlayerID)) {
         switch (message.content.toLowerCase()) {
             case 'giveup':
-                message.channel.send(`🙁 | ${L.GuessGameAnswer} ${client.GuessGame.get(message.author.id + message.channel.id)}`);
+                message.channel.send({content: `🙁 | ${L.GuessGameAnswer} ${client.GuessGame.get(message.author.id + message.channel.id)}`});
                 client.GuessGame.delete(PlayerID);
                 client.GuessTries.delete(PlayerID);
                 break;
 
             case 'cancel':
             case 'exit':
-                message.channel.send(`${L.GuessGameClose} 👋🏼😄`);
+                message.channel.send({content: `${L.GuessGameClose} 👋🏼😄`});
                 client.GuessGame.delete(PlayerID);
                 client.GuessTries.delete(PlayerID);
                 break;
@@ -20,7 +20,7 @@ module.exports = (message, L, client, DataMgr) => {
                 if (message.content.length < 3 && !isNaN(parseInt(message.content))){
                     let CompareNumber = client.GuessGame.get(message.author.id + message.channel.id);
                     if (parseInt(message.content) === CompareNumber) {
-                        message.channel.send(`🎉 | ${L.GuessGameCongrats.replace('{0}',message.author.username)}\n${L.YourReward}: **${client.GuessTries.get(PlayerID)}** ${L.Cookies}! 🍪`);
+                        message.channel.send({content: `🎉 | ${L.GuessGameCongrats.replace('{0}',message.author.username)}\n${L.YourReward}: **${client.GuessTries.get(PlayerID)}** ${L.Cookies}! 🍪`});
                         client.GuessGame.delete(PlayerID);
                         let TestRead = DataMgr.Read(`./data/${message.guild.id}/coin`, message.author.id);
                         let CoinBefore;

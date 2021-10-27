@@ -15,15 +15,15 @@ module.exports = {
 
             if (wRegExp.test(message.content.toLowerCase())) {
                 PickRdmNum = Math.floor(Math.random() * pAnswers.w.length);
-                message.reply(pAnswers.w[PickRdmNum]);
+                message.reply({content: pAnswers.w[PickRdmNum]});
             }
             else {
                 PickRdmNum = Math.floor(Math.random() * pAnswers.answers.length);
-                message.reply(pAnswers.answers[PickRdmNum]);
+                message.reply({content: pAnswers.answers[PickRdmNum]});
             }
         }
         else {
-            message.reply(L.EightBallInvalidQ);
+            message.reply({content: L.EightBallInvalidQ});
         }
     }
 }

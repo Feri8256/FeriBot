@@ -14,7 +14,7 @@ module.exports = {
             KoalaEmbed.setFooter('some-random-api.ml')
             KoalaEmbed.setTimestamp()
 
-            message.channel.send(KoalaEmbed);
+            message.channel.send({embeds: [KoalaEmbed]});
         }
 
         fetch('https://some-random-api.ml/img/koala')

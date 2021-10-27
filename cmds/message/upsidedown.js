@@ -59,6 +59,6 @@ module.exports = {
             output += charMap[char] || char;
         }
 
-        message.channel.send(output);
+        message.channel.send({content: output});
     }
 }

@@ -13,7 +13,7 @@ module.exports = (message, client, L, DataMgr, findLanguage) => {
             case 'exit':
                 client.QuizGamePlayer.delete(message.author.id + message.channel.id);
                 client.QuizGameLevel.delete(message.author.id);
-                message.reply(L.QuizCancel); //Feladja
+                message.reply({content: L.QuizCancel}); //Feladja
                 break;
 
             default:
@@ -24,7 +24,7 @@ module.exports = (message, client, L, DataMgr, findLanguage) => {
 
                     if (Question.possibleAnswers[AnswerIndex].correct) {
                         let PlayerLevelBefore = client.QuizGameLevel.get(message.author.id);
-                        message.reply(`☑ ${L.QuizCorrectAnswer} (**+10** 🍪)`); //helyes
+                        message.reply({content: `☑ ${L.QuizCorrectAnswer} (**+10** 🍪)`}); //helyes
 
                         let TestRead = DataMgr.Read(`./data/${message.guild.id}/coin`, message.author.id);
                         let CoinBefore;
@@ -43,7 +43,7 @@ module.exports = (message, client, L, DataMgr, findLanguage) => {
                         //megkeresni a helyes megfejtést...
                         let CorrectAnswerIndex = Question.possibleAnswers.findIndex(element => element.correct);
 
-                        message.reply(`❌ ${L.QuizWrongAnswer.replace('{0}', Question.possibleAnswers[CorrectAnswerIndex].answerText)}`); //Helytelen
+                        message.reply({content: `❌ ${L.QuizWrongAnswer.replace('{0}', Question.possibleAnswers[CorrectAnswerIndex].answerText)}`}); //Helytelen
                         client.QuizGamePlayer.delete(message.author.id + message.channel.id);
                         client.QuizGameLevel.delete(message.author.id);
                     }

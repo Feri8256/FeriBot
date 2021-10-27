@@ -21,18 +21,18 @@ module.exports = {
 
 
         if (usr.id === client.user.id) {
-            message.channel.send(L.CookiesMeNo);
+            message.channel.send({content: L.CookiesMeNo});
             return;
         }
         if (usr.bot) {
-            message.channel.send(L.CookiesBotsNo);
+            message.channel.send({content: L.CookiesBotsNo});
             return;
         }
         if(!cookieRead){
-            message.channel.send(`${usrname} ${L.CookiesNotHave} 🙁`);
+            message.channel.send({content: `${usrname} ${L.CookiesNotHave} 🙁`});
         }
         else{
-            message.channel.send(`${usrname} ${L.CookiesHave}: **${cookieRead}** ${L.Cookies} 🍪`);
+            message.channel.send({content: `${usrname} ${L.CookiesHave}: **${cookieRead}** ${L.Cookies} 🍪`});
         }
     }
 }

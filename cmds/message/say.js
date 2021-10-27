@@ -11,7 +11,7 @@ module.exports = {
 
         if (args.length >= 2) {
             if (uzenet.includes('@everyone' || '@here')) {
-                message.channel.send('🙄');
+                message.channel.send({content: '🙄'});
             }
             else {
     
@@ -23,11 +23,11 @@ module.exports = {
                 var filteredMsg = firstStep.join(' ');
     
                 message.delete()
-                message.channel.send(filteredMsg);
+                message.channel.send({content: filteredMsg});
             }
         }
         else {
-            message.channel.send(L.SayWhat);
+            message.channel.send({content: L.SayWhat});
         }
     }
 }

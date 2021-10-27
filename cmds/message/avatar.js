@@ -10,6 +10,6 @@ module.exports = {
             pfpEmbed.setTitle(L.AvatarUser.replace('{0}',usr.tag))
             pfpEmbed.setImage(usr.displayAvatarURL({size:256}))
 
-        message.channel.send(pfpEmbed)
+        message.channel.send({embeds: [pfpEmbed]})
     }
 }

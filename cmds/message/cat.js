@@ -14,7 +14,7 @@ module.exports = {
             CatEmbed.setFooter('some-random-api.ml')
             CatEmbed.setTimestamp()
     
-            message.channel.send(CatEmbed);
+            message.channel.send({embeds: [CatEmbed]});
         }
 
         fetch(`https://some-random-api.ml/img/cat`)

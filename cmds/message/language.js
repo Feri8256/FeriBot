@@ -12,17 +12,17 @@ module.exports = {
                     case 'hu':
                         DataMgr.Write(`./data/${message.guild.id}`, 'language', '0');
                         client.cachedLangSettings.set(message.guild.id, 0);
-                        message.channel.send(`☑ | Language setting has been changed to: Hungarian!`);
+                        message.channel.send({content: `☑ | Language setting has been changed to: Hungarian!`});
                         break;
     
                     case 'en':
                         DataMgr.Write(`./data/${message.guild.id}`, 'language', '1');
                         client.cachedLangSettings.set(message.guild.id, 1);
-                        message.channel.send(`☑ | Language setting has been changed to: English!`);
+                        message.channel.send({content: `☑ | Language setting has been changed to: English!`});
                         break;
     
                     default:
-                        message.channel.send(`⚠ | Invalid argument!`);
+                        message.channel.send({content: `⚠ | Invalid argument!`});
                 }
             }
     }

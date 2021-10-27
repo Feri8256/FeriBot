@@ -8,7 +8,7 @@ module.exports  =   (member, client, DataMgr) => {
         let lMsgCh  = client.channels.cache.get(lMsgID)
 
         if(lMsgCh){
-            lMsgCh.send(`<@${member.user.id}> - ${lMsgText}`);
+            lMsgCh.send({content: `<@${member.user.id}> - ${lMsgText}`});
         }
         else{
             return;

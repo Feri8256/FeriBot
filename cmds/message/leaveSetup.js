@@ -12,7 +12,7 @@ module.exports = {
                     case 'reset':
                         //visszaállít, töröl
                         DataMgr.Delete(`./data/${guildID}`, 'leave');
-                        message.reply(`☑ | ${L.LeaveRemoved}`);
+                        message.reply({content: `☑ | ${L.LeaveRemoved}`});
                     break;
             
                 default:
@@ -22,11 +22,11 @@ module.exports = {
                         let customMessageInput   =   args.slice(2, args.length);
                         let customMessage =   customMessageInput.slice(0, 250).join(' ');
                         DataMgr.Write(`./data/${guildID}`, 'leave', mentionedChannel.id + ';' + customMessage);
-                        message.reply(`☑ | ${L.LeaveAdded}`);
+                        message.reply({content: `☑ | ${L.LeaveAdded}`});
                     }
                     else{
                         //érvénytelen
-                        message.channel.send(ErrMessages.E_InvalidArgs(L));
+                        message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
                     }
                 }
     }

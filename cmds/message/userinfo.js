@@ -6,7 +6,7 @@ module.exports = {
     usage: ['[@Felhasználó#0000]', '[@User#0000]'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
         let usr = message.mentions.users.first() || message.author;
-        let member = message.guild.member(usr);
+        let member = message.guild.members.cache.get(usr.id);
 
         let UserEmbed = new Discord.MessageEmbed()
         UserEmbed.setColor('RANDOM')
@@ -14,13 +14,13 @@ module.exports = {
         UserEmbed.setTitle(usr.tag)
         UserEmbed.addFields(
             { name: 'ID', value: usr.id },
-            { name: L.UsrInfoAccountCreatedAt, value: usr.createdAt },
-            { name: L.UsrInfoJoinedAt, value: member.joinedAt },
+            { name: L.UsrInfoAccountCreatedAt, value: String(usr.createdAt) },
+            { name: L.UsrInfoJoinedAt, value: String(member.joinedAt) },
             { name: L.UsrInfoNickName, value: member.nickname ? member.nickname : L.NotDefined },
-            { name: L.UsrInfoHighestRole, value: member.roles.highest },
+            { name: L.UsrInfoHighestRole, value: String(member.roles.highest) },
             { name: 'bot?', value: usr.bot ? L.YesTrue: L.NoFalse }
         )
     
-        message.channel.send(UserEmbed);
+        message.channel.send({embeds: [UserEmbed]});
     }
 }

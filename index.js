@@ -2,9 +2,20 @@
 
 require('dotenv').config();
 const Discord = require('discord.js');
-const client = new Discord.Client({
-    disableMentions: "everyone"
-});
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const client = new Discord.Client(
+    {
+        intents: [
+            Discord.Intents.FLAGS.GUILDS, 
+            Discord.Intents.FLAGS.GUILD_MESSAGES, 
+            Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
+            Discord.Intents.FLAGS.GUILD_MEMBERS,
+            Discord.Intents.FLAGS.GUILD_PRESENCES,
+            Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        ]
+    }
+);
 
 client.cmds = new Discord.Collection();
 client.cachedLangSettings = new Map();
@@ -75,8 +86,8 @@ client.wordGamePlayerHints = new Map();
 client.on('ready', () => {
     console.clear();
     console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nParancsok: ${CmdFiles.length}`);
-    //client.user.setActivity(`${prefix}help | ${prefix}segítség`, {type: 'LISTENING'});
-    client.user.setStatus('invisible');
+    client.user.setActivity(`Running discord.js v13. I can start to rewrite the whole bot now... | ${prefix}help | ${prefix}segítség`, {type: 'PLAYING'});
+    //client.user.setStatus('invisible');
 });
 
 //Eltávolítanak egy szerverről
@@ -110,7 +121,7 @@ function CmdExecuted () {
 }
 
 //Automatikus dolgok
-client.on('message', async message => {
+client.on('messageCreate', async message => {
     if (message.guild === null) return; //Ha az üzenet DM-ként érkezik, akkor nincs guild, tehát ne csinálj semmit, különben hibával leállsz.
     if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
     if (message.author.bot) return; //Ha az üzenet küldője bot, akkor ne csinálj semmit!
@@ -129,7 +140,7 @@ client.on('message', async message => {
 });
 
 //Prefixes parancsok
-client.on('message', (message) => {
+client.on('messageCreate', (message) => {
     if (!message.content.startsWith(prefix)) return; //Ha az üzenet nem prefixel kezdődik, akkor ne csinálj semmit!
     if (message.guild === null) return; //Ha az üzenet DM-ként érkezik, akkor nincs guild, tehát ne csinálj semmit, különben hibával leállsz.
     if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
@@ -153,13 +164,13 @@ client.on('message', (message) => {
     else {
         //Ha joghoz van kötve a parancs
         if (chkCmd.reqPerms != undefined) {
-            if (message.member.hasPermission(chkCmd.reqPerms)) {
+            if (message.member.permissions.has(chkCmd.reqPerms)) {
                 //Ha van joga, fogadj szót!...
                 chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
             }
             else {
                 //Ha nincs joga, csak szólj, hogy nincs nyulkapiszka és return...
-                message.channel.send(ErrMessages.W_UsrNoPermission(L));
+                message.channel.send({embeds: [ErrMessages.W_UsrNoPermission(L)]});
                 return;
             }
         }
@@ -168,7 +179,7 @@ client.on('message', (message) => {
         if (chkCmd.cooldown && chkCmd.cooldown != undefined) {
             //Ha benne van egy felhasználó a listában, tudassa vele.
             if(CoolDown.has(message.author.id)) {
-                message.channel.send(ErrMessages.W_CooldownWait(L));
+                message.channel.send({embeds: [ErrMessages.W_CooldownWait(L)]});
             }
             //Egyébként futtassa le és adja hozzá a felhasználót a CoolDown-hoz, majd törölje x másodperc után
             else {

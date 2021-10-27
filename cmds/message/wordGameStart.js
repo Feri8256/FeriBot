@@ -9,7 +9,7 @@ module.exports = {
     //////////
         let wordGamePlayerID = message.guild.id + message.author.id;
         if (client.wordGamePlayer.has(wordGamePlayerID)) {
-            message.reply(L.WordGameNewNo);
+            message.reply({content: L.WordGameNewNo});
         }
         else {
             let wordList = require(`../../json/words-${findLanguage(client, message.guild.id)}.json`);
@@ -25,7 +25,7 @@ module.exports = {
             let allowedHints = Math.round(wordList[rdmWordNum].length / 5);
             client.wordGamePlayerHints.set(wordGamePlayerID, allowedHints)
     
-            message.reply(L.WordGameStart.replace('{0}',shWord).replace('{1}',allowedTries).replace('{2}',allowedHints));
+            message.reply({content: L.WordGameStart.replace('{0}',shWord).replace('{1}',allowedTries).replace('{2}',allowedHints)});
         }
     }
 }

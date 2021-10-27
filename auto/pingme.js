@@ -8,6 +8,6 @@ module.exports = (message, L, client) => {
         MyPrefxEmbed.setTitle(`${L.MyPrefix} ${client.prefix}`)
         MyPrefxEmbed.setDescription(`${L.MyHelps} **${client.prefix}help**`)
 
-        message.channel.send(MyPrefxEmbed)
+        message.channel.send({embeds: [MyPrefxEmbed]})
     }
 }

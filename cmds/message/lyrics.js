@@ -9,7 +9,7 @@ module.exports = {
     usage: ['<dal cím>', '<song title>'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
             if (!args[1]) {
-                message.channel.send(ErrMessages.E_InvalidArgs(L));
+                message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
             }
             else {
                 let inputTitle = args.slice(1, args.length).join(' ');
@@ -21,7 +21,7 @@ module.exports = {
                         let lyricsjson = JSON.parse(textResponse);
     
                         if (lyricsjson.error) {
-                            message.channel.send(`❌ | ${lyricsjson.error}`);
+                            message.channel.send({content: `❌ | ${lyricsjson.error}`});
                         }
                         else {
                             let rawLyrics = lyricsjson.lyrics;
@@ -38,7 +38,7 @@ module.exports = {
                             LyricsEmbed.setURL(lyricsjson.links.genius)
                             LyricsEmbed.setTimestamp()
     
-                            message.channel.send(LyricsEmbed);
+                            message.channel.send({embeds: [LyricsEmbed]});
                         }
                     }
                 };

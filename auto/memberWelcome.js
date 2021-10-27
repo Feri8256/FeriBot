@@ -14,9 +14,9 @@ module.exports  =   (member, client, DataMgr) => {
 
         if(wMsgCh){
             wMsgCh.send(
-                wMsgText.replace(/@User/g, `<@${member.user.id}>`)
+                { content: wMsgText.replace(/@User/g, `<@${member.user.id}>`)
                 .replace(/UserName/g, member.user.name)
-                .replace(/ServerName/g, member.guild)
+                .replace(/ServerName/g, member.guild)}
             );
         }
     }

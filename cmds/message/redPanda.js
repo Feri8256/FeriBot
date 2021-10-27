@@ -14,7 +14,7 @@ module.exports = {
             RedPandaEmbed.setFooter('some-random-api.ml')
             RedPandaEmbed.setTimestamp()
 
-            message.channel.send(RedPandaEmbed);
+            message.channel.send({embeds: [RedPandaEmbed]});
         }
 
         fetch('https://some-random-api.ml/img/red_panda')

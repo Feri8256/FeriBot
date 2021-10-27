@@ -18,6 +18,6 @@ module.exports = {
         QuoteEmbed.setFooter(`${L.Source}: ${idezetek[rdmIdezetNum].forras}`)
         QuoteEmbed.setTimestamp()
     
-        message.channel.send(QuoteEmbed);
+        message.channel.send({embeds: [QuoteEmbed]});
     }
 }

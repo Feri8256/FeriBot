@@ -11,6 +11,6 @@ module.exports = {
         if (!inputText) return;
         let splittedText = inputText.split('');
         let outputText = shuffle(splittedText).join('');
-        message.channel.send(outputText);
+        message.channel.send({content: outputText});
     }
 }

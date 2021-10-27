@@ -71,22 +71,22 @@ module.exports = (client, message, DataMgr, L) => {
         switch(msgContent) {
             case 'x':
                 resetEverything(wgPlayerID);
-                message.reply(L.WordGameExit);
+                message.reply({content: L.WordGameExit});
                 break;
 
             case 'g':
-                message.reply(L.WordGameGiveUp.replace('{0}', wgPlayerData.normalWord));
+                message.reply({content: L.WordGameGiveUp.replace('{0}', wgPlayerData.normalWord)});
                 resetEverything(wgPlayerID);
                 break;
 
             case 'h':
                 if (isNaN(wgPlayerHints) || wgPlayerHints <= 0) {
-                    message.reply(L.WordGameNoHelping);
+                    message.reply({content: L.WordGameNoHelping});
                     client.wordGamePlayerHints.delete(wgPlayerID);
                 }
                 else {
                     wgPlayerHints--
-                    message.reply(L.WordGameHelping.replace('{0}', giveRandomHint(wgPlayerData.normalWord)).replace('{1}', wgPlayerHints));
+                    message.reply({content: L.WordGameHelping.replace('{0}', giveRandomHint(wgPlayerData.normalWord)).replace('{1}', wgPlayerHints)});
                     client.wordGamePlayerHints.set(wgPlayerID, wgPlayerHints);
                 }
                 break;
@@ -95,19 +95,19 @@ module.exports = (client, message, DataMgr, L) => {
                 if (msgContent.length < wgPlayerData.normalWord.length-2 || msgContent.length > wgPlayerData.normalWord.length) return;
                 if (msgContent === wgPlayerData.normalWord.toLowerCase() && wgPlayerTries > 0) {
                     let reward = wgPlayerTries * 10;
-                    message.reply(L.WordGameCorrect.replace('{0}', reward));
+                    message.reply({content: L.WordGameCorrect.replace('{0}', reward)});
                     calcReward(message.guild.id, message.author.id, reward);
                     resetEverything(wgPlayerID);
                 }
                 else {
                     wgPlayerTries--
                     if(wgPlayerTries === 0) {
-                        message.reply(L.WordGameNoTriesAndCorrect.replace('{0}', wgPlayerData.normalWord));
+                        message.reply({content: L.WordGameNoTriesAndCorrect.replace('{0}', wgPlayerData.normalWord)});
                         resetEverything(wgPlayerID);
                     }
                     else {
                         client.wordGamePlayerTries.set(wgPlayerID, wgPlayerTries);
-                        message.reply(L.WordGameWrongAndTries.replace('{0}', wgPlayerTries));
+                        message.reply({content: L.WordGameWrongAndTries.replace('{0}', wgPlayerTries)});
                     }
                         
                 }

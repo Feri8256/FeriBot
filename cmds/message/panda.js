@@ -14,7 +14,7 @@ module.exports = {
             PandaEmbed.setFooter('some-random-api.ml')
             PandaEmbed.setTimestamp()
 
-            message.channel.send(PandaEmbed);
+            message.channel.send({embeds: [PandaEmbed]});
         }
 
         fetch('https://some-random-api.ml/img/panda')

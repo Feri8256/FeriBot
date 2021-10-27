@@ -11,8 +11,8 @@ module.exports = {
         WolfEmbed.setColor('#979797')
         WolfEmbed.setImage(wolfImgLink.wolves[rdmWolfNum])
         WolfEmbed.setTimestamp()
-        WolfEmbed.setFooter(`${L.ImageNumber}: ${rdmWolfNum}`)
+        WolfEmbed.setFooter(`#${rdmWolfNum}`)
     
-        message.channel.send(WolfEmbed);
+        message.channel.send({embeds: [WolfEmbed]});
     }
 }

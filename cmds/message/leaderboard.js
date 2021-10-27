@@ -26,7 +26,7 @@ module.exports = {
             }
         }
         else {
-            MsgCh.send(L.LeaderBoardNoRanked);
+            MsgCh.send({content: L.LeaderBoardNoRanked});
         }
     
         let sortedData = readedData.sort(function(a,b){
@@ -40,11 +40,12 @@ module.exports = {
     
         let textField = '';
         for (var i = 0; i < sortedData.length; i++) {
+            if (!message.guild.members.cache.get(sortedData[i].userID)) continue;
             textField += `**#${i + 1}** <@${sortedData[i].userID}> - \`${sortedData[i].value}\` 🍪\n`;
         }
     
         leaderbEmbed.addField(L.LeaderBoardTop20,textField)
         leaderbEmbed.setTimestamp()
-        MsgCh.send(leaderbEmbed);
+        MsgCh.send({embeds: [leaderbEmbed]});
     }
 }

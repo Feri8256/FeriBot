@@ -21,7 +21,7 @@ module.exports = {
                 MemeEmbed.setImage(d.url)
             }
 
-            message.channel.send(MemeEmbed);
+            message.channel.send({embeds: [MemeEmbed]});
         }
 
         fetch("https://meme-api.herokuapp.com/gimme")

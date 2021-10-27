@@ -10,10 +10,10 @@ module.exports = {
         var owoIn = args.slice(1, args.length).join(' ');
 
         if (!owoIn) {
-            message.channel.send(ErrMessages.E_InvalidArgs(L));
+            message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
         }
         else {
-            message.channel.send(owoifyx(owoIn));
+            message.channel.send({content: owoifyx(owoIn)});
         }
     }
 }

@@ -4,7 +4,9 @@ module.exports = {
     name: 'help',
     aliases: ['commands', 'parancsok', 'segítség'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        let ArrOfCmds = client.cmds.array();
+        //let ArrOfCmds = client.cmds.array();
+        let ArrOfCmds = [...client.cmds.values()];
+
         let langSetting = findLanguage(client, message.guild.id);
         if (!args[1]) {
             //Kategóriák listája
@@ -18,7 +20,7 @@ module.exports = {
                 { name: L.BotInvitesText, value: `[${L.BotInviteTextLink}](${variables.Bot_invite})${variables.Bot_support_server_invite ? ` • [${L.BotSupportServerTextLink}](${variables.Bot_support_server_invite})` : ''}` },
             )
             HelpCategories.setFooter(`${ArrOfCmds.length} ${L.CmdModuleCount}`)
-            message.channel.send(HelpCategories)
+            message.channel.send({embeds: [HelpCategories]})
         }
         else {
             let HelpCategoryEmbed = new Discord.MessageEmbed()
@@ -33,7 +35,7 @@ module.exports = {
             let CategoryL = CategoryArr.length;
 
             if (CategoryL === 0) {
-                message.reply(L.UnknownHelpCategory)
+                message.reply({content: L.UnknownHelpCategory})
                 return;
             }
 
@@ -59,7 +61,7 @@ module.exports = {
                
             }
             
-            message.channel.send(HelpCategoryEmbed);
+            message.channel.send({embeds: [HelpCategoryEmbed]});
         }
     }
 }

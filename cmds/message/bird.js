@@ -14,7 +14,7 @@ module.exports = {
             BirdEmbed.setFooter('some-random-api.ml')
             BirdEmbed.setTimestamp()
 
-            message.channel.send(BirdEmbed);
+            message.channel.send({embeds: [BirdEmbed]});
         }
 
         fetch('https://some-random-api.ml/img/bird')

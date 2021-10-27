@@ -12,7 +12,7 @@ module.exports = {
             DogEmbed.setImage(d.link)
             DogEmbed.setTimestamp()
                 
-            message.channel.send(DogEmbed)
+            message.channel.send({embeds: [DogEmbed]})
        }
     
        fetch('https://some-random-api.ml/img/dog')

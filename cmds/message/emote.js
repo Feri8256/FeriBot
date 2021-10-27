@@ -15,10 +15,10 @@ module.exports = {
                 let emoteURLExt = emote.animated ? '.gif' : '.png'
                 let emoteURL = variables.Emoji_BaseUrl + emote.id + emoteURLExt
 
-                message.channel.send(`\`${emote.name}\``, { files: [emoteURL] })
+                message.channel.send({ content: `\`${emote.name}\``, files: [emoteURL] })
             }
             else {
-                message.channel.send(`❌ | ${L.EmoteNotValid}`);
+                message.channel.send({content: `❌ | ${L.EmoteNotValid}`});
             }
         }
     }

@@ -8,7 +8,7 @@ module.exports = {
         let role = message.mentions.roles.first();
 
         if (role == null || role == undefined) {
-            message.channel.send(ErrMessages.E_InvalidArgs(L))
+            message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]})
         }
         else {
             let rolePermNamesArr = role.permissions.toArray();
@@ -33,16 +33,16 @@ module.exports = {
             roleInfoEmbed.setTitle(L.RoleInfoTitle)
             roleInfoEmbed.setColor(role.hexColor || 'RANDOM')
             roleInfoEmbed.addFields(
-                { name: L.RoleInfoRole, value: role},
+                { name: L.RoleInfoRole, value: String(role)},
                 { name: L.RoleInfoName, value: role.name},
                 { name: L.RoleInfoColorCode, value: role.hexColor},
                 { name: 'ID', value: role.id},
-                { name: L.RoleInfoPosition, value: role.rawPosition},
+                { name: L.RoleInfoPosition, value: String(role.rawPosition)},
                 { name: L.RoleInfoHoist, value: roleInfoHoistedText},
-                { name: L.RoleInfoCreatedAt, value: role.createdAt},
+                { name: L.RoleInfoCreatedAt, value: String(role.createdAt)},
                 { name: L.RoleInfoPermissions, value: rolePermNamesText}
             )
-            message.channel.send(roleInfoEmbed);
+            message.channel.send({embeds: [roleInfoEmbed]});
         }
     }
 }

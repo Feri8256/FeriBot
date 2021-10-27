@@ -8,11 +8,11 @@ module.exports = {
         var TextToRev = args.slice(1, args.length).join(' ');
 
         if (!TextToRev) {
-            message.channel.send(ErrMessages.E_InvalidArgs(L));
+            message.channel.send({embeds: [ErrMessages.E_InvalidArgs(L)]});
         }
         else {
             var reversedText = TextToRev.split('').reverse().join('');
-            message.channel.send(reversedText);
+            message.channel.send({content: reversedText});
         }
     }
 }
