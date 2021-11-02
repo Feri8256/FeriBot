@@ -1,9 +1,9 @@
 //Legelső Discord bot próbálkozásom. Elkezdtem: 2020.04.07
+const messageCommandsPath = './cmds/message';
+const slashCommandsPath = './cmds/slash';
 
 require('dotenv').config();
 const Discord = require('discord.js');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
 const client = new Discord.Client(
     {
         intents: [
@@ -17,7 +17,10 @@ const client = new Discord.Client(
     }
 );
 
-client.cmds = new Discord.Collection();
+client.messageCommands = new Discord.Collection();
+client.slashCommands = new Discord.Collection();
+client.slashCommandsBody = [];
+
 client.cachedLangSettings = new Map();
 client.ExecutedCmdCount = 0;
 
@@ -28,16 +31,23 @@ const fs = require('fs-extra');
 const DataMgr = require('./dataManager');
 const findLanguage = require('./findLanguage');
 const Language = require('./languages.json');
+const slashUpdater = require('./updateSlashCommands');
 
-const messageCommandsPath = './cmds/message';
-const slashCommandPath = '';
+//Üzenet alapú parancs betöltő
+let msgCmdFiles = fs.readdirSync(messageCommandsPath);
+for (let fileName of msgCmdFiles) {
+    console.log(`${messageCommandsPath}/${fileName}`);
+    let rCmdF = require(`${messageCommandsPath}/${fileName}`);
+    client.messageCommands.set(rCmdF.name, rCmdF);
+}
 
-//Parancs betöltő
-let CmdFiles = fs.readdirSync(messageCommandsPath);
-for (const f of CmdFiles) {
-    console.log(f);
-    const rCmdF = require(`${messageCommandsPath}/${f}`);
-    client.cmds.set(rCmdF.name, rCmdF);
+//Slash betöltő
+let slashCmdFiles = fs.readdirSync(slashCommandsPath);
+for (let fileName of slashCmdFiles) {
+    console.log(`${slashCommandsPath}/${fileName}`);
+    let loaded = require(`${slashCommandsPath}/${fileName}`);
+    client.slashCommands.set(loaded.commandData.name, loaded);
+    client.slashCommandsBody.push(loaded.commandData);
 }
 
 //Hibák globális kezelése
@@ -85,9 +95,9 @@ client.wordGamePlayerHints = new Map();
 //Készen állok!
 client.on('ready', () => {
     console.clear();
-    console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nParancsok: ${CmdFiles.length}`);
-    client.user.setActivity(`Running discord.js v13. I can start to rewrite the whole bot now... | ${prefix}help | ${prefix}segítség`, {type: 'PLAYING'});
-    //client.user.setStatus('invisible');
+    console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nÜzenet parancsok: ${client.messageCommands.size}\nSlash parancsok: ${client.slashCommands.size}`);
+    client.user.setActivity(`🙄 ${prefix}help | ${prefix}segítség`, {type: 'WATCHING'});
+    slashUpdater(client, client.slashCommandsBody);
 });
 
 //Eltávolítanak egy szerverről
@@ -155,7 +165,7 @@ client.on('messageCreate', (message) => {
 
     //Egy parancs lefuttatása előtt ki kell azt nyernünk a "client.cmds" collection-ból.
     //Ez kétféleképpen történhet: a neve, vagy egy alias alapján, amit meg kell persze keresni...
-    let chkCmd = client.cmds.get(args[0].toLowerCase()) || client.cmds.find(c => c.aliases && c.aliases.includes(args[0].toLowerCase()));
+    let chkCmd = client.messageCommands.get(args[0].toLowerCase()) || client.messageCommands.find(c => c.aliases && c.aliases.includes(args[0].toLowerCase()));
         
     //Ha a chkCmd null, akkor azt jelenti, nincs meg az, amit kerestünk...
     if (!chkCmd) {
@@ -195,6 +205,19 @@ client.on('messageCreate', (message) => {
         }
         CmdExecuted();
     }
+});
+
+//Slash
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isCommand()) return;
+    const { commandName, options } = interaction;
+    let Ls = findLanguage(client, interaction.guild.id);
+    let L = Language[Ls];
+
+    let chkCommand = client.slashCommands.get(commandName);
+    if (!chkCommand) return;
+    chkCommand.execute(Discord, client, interaction, options, L);
+    CmdExecuted();
 });
 
 client.login(process.env.BOT_TOKEN);

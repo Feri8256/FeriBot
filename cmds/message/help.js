@@ -4,8 +4,7 @@ module.exports = {
     name: 'help',
     aliases: ['commands', 'parancsok', 'segítség'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        //let ArrOfCmds = client.cmds.array();
-        let ArrOfCmds = [...client.cmds.values()];
+        let ArrOfCmds = [...client.messageCommands.values()];
 
         let langSetting = findLanguage(client, message.guild.id);
         if (!args[1]) {
@@ -23,15 +22,8 @@ module.exports = {
             message.channel.send({embeds: [HelpCategories]})
         }
         else {
-            let HelpCategoryEmbed = new Discord.MessageEmbed()
-            HelpCategoryEmbed.setColor('#f7f7f7')
-    
             let CategoryName = args[1].toLowerCase();
-            
             let CategoryArr = ArrOfCmds.filter(elem => elem.categories && elem.categories.includes(CategoryName));
-           
-            HelpCategoryEmbed.setFooter(`[]: ${L.Optional} | <>: ${L.Required}`)
-            
             let CategoryL = CategoryArr.length;
 
             if (CategoryL === 0) {
@@ -39,26 +31,24 @@ module.exports = {
                 return;
             }
 
+            let HelpCategoryEmbed = new Discord.MessageEmbed()
+            HelpCategoryEmbed.setColor('#f7f7f7')
+            HelpCategoryEmbed.setFooter(`[]: ${L.Optional} | <>: ${L.Required}`)
+
             HelpCategoryEmbed.setTitle(`help 👉🏼 ${CategoryName} (${CategoryL})`)
             //Kategória mezőket létrehozza
             for(var i=0; i<CategoryL; i++){
-
                 //parancs aliases mezőt létrehozza
                 let CmdAliases = `\`${client.prefix + CategoryArr[i].name}${CategoryArr[i].usage ? "" : "\`"}`;
-
                 if(CategoryArr[i].usage) CmdAliases += " "+CategoryArr[i].usage[langSetting]+"`";
-
                 let AliasL = 0;
                 if (CategoryArr[i].aliases) AliasL = CategoryArr[i].aliases.length;
-
                 for(var j=0; j<AliasL; j++) {
                     CmdAliases += " • `";
                     CmdAliases += `${client.prefix + CategoryArr[i].aliases[j]}${CategoryArr[i].usage ? "" : "\`"}`;
                     if(CategoryArr[i].usage) CmdAliases += " "+CategoryArr[i].usage[langSetting]+"`";
                 }
-
                 HelpCategoryEmbed.addField(CmdAliases, CategoryArr[i].description[langSetting])
-               
             }
             
             message.channel.send({embeds: [HelpCategoryEmbed]});

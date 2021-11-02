@@ -1,10 +1,10 @@
 module.exports = {
-    name:'server',
-    aliases: ['serverinfo', 'guild', 'guildinfo'],
-    categories: ['info'],
-    description: ['Információkat jelenít meg a jelenlegi szerverről.', 'Informations about this guild.'],
-    async execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        let g = message.guild;
+    commandData: {
+        name: 'server',
+        description: 'Információk erről a szerverről.'
+    },
+    async execute(Discord, client, interaction, options, L) {
+        let g = interaction.guild;
         let owner = await g.fetchOwner();
         
         let InfoEmbed = new Discord.MessageEmbed()
@@ -25,9 +25,9 @@ module.exports = {
         if(g.premiumSubscriptionCount > 0) {
             InfoEmbed.addField(L.ServerInfoBoostStatus, `${L.ServerInfoBoostCount}: ${g.premiumSubscriptionCount}\n${L.ServerInfoBoostTier}: ${g.premiumTier}`)
         }
-        InfoEmbed.setFooter(`${L.RequestedBy}: ${message.author.tag}`)
+        InfoEmbed.setFooter(`${L.RequestedBy}: ${interaction.user.tag}`)
         InfoEmbed.setTimestamp()
 
-        message.channel.send({embeds: [InfoEmbed]});
+        interaction.reply({embeds: [InfoEmbed]});
     }
 }

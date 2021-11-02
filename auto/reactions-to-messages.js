@@ -1,4 +1,5 @@
 let nap = require('./module-daytime');
+const helloRegexp = /^h{1,}[ae]{1,}[ly]{1,}[ioó]{1,}/i;
 
 const greet =  [
     'sziasztok',
@@ -40,7 +41,7 @@ module.exports = (message) => {
         message.channel.send('👋🏼');
     }
 
-    if (greet.includes(inputMsg.toLowerCase())) {
+    if (greet.includes(inputMsg.toLowerCase()) || helloRegexp.test(inputMsg.toLowerCase())) {
         randomThing = Math.floor(Math.random() * 2);
         if (randomThing === 1) {
             const welcomeText = [
@@ -50,7 +51,8 @@ module.exports = (message) => {
                 `Szép jó ${nap.getNapszak()} kedves`,
                 "Helló",
                 "Hali",
-                "Szia helló"
+                "Szia helló",
+                "Neked is"
             ];
 
             let rdmWelcome = Math.floor(Math.random() * (welcomeText.length * 1));
