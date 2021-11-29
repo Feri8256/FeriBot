@@ -10,7 +10,7 @@ module.exports = {
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
         var emoteStatsEmbed;
 
-        if (message.member.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && args[1]) {
+        if (message.member.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS) && args[1]) {
             switch (args[1]) {
                 case '1':
                     if (!fs.existsSync(`./data/${message.guild.id}/emotestats.json`) &&

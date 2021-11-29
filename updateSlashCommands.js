@@ -7,6 +7,7 @@ module.exports = async function(c, b) {
     try {
         console.log('Slash: looking for changes...')
         await rest.get(Routes.applicationGuildCommands(c.user.id, '697161337049972778'))
+
         .then(async (data) => {
             if (!data || data.length !== b.length) {
                 console.log('Slash: changes found! Updating...')
@@ -18,7 +19,7 @@ module.exports = async function(c, b) {
             else {
                 console.log('Slash: no changes has been made!')
             }
-        })
+        });
 
         //console.log('Slash: frissítése...')
         //await rest.put(

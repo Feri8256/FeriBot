@@ -96,7 +96,7 @@ client.wordGamePlayerHints = new Map();
 client.on('ready', () => {
     console.clear();
     console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nÜzenet parancsok: ${client.messageCommands.size}\nSlash parancsok: ${client.slashCommands.size}`);
-    client.user.setActivity(`🙄 ${prefix}help | ${prefix}segítség`, {type: 'WATCHING'});
+    client.user.setActivity(`👀 ${prefix}help | ${prefix}segítség`, {type: 'WATCHING'});
     slashUpdater(client, client.slashCommandsBody);
 });
 
