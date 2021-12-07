@@ -21,11 +21,12 @@ module.exports = async function(c, b) {
             }
         });
 
-        //console.log('Slash: frissítése...')
-        //await rest.put(
-        //    Routes.applicationGuildCommands(c.user.id, '697161337049972778'), { body: b }
-        //);
-        //console.log('Slash: frissítése befejeződött!')    
+        await rest.put(
+            Routes.applicationCommands(c.user.id), {
+                body: b 
+            }
+        );
+        console.log('Slash: frissítése befejeződött!');    
     }
     catch (error) {
         console.error(error);

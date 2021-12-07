@@ -1,5 +1,7 @@
-const { Permissions } = require('discord.js');
+const { Permissions, MessageAttachment } = require('discord.js');
 const fs = require('fs');
+//const B = require('buffer');
+
 module.exports = {
     name: 'emote-statistics',
     aliases: ['emotestat','emotestats','emote-stats'],
@@ -60,6 +62,28 @@ module.exports = {
                         else {
                             message.reply({content: L.EmoteStatsNothingToReset});
                         }
+                    }
+                    break;
+
+                case 'export':
+                    if (fs.existsSync(`./data/${message.guild.id}/emotestats.json`)) {
+                        let readed = JSON.parse(fs.readFileSync(`./data/${message.guild.id}/emotestats.json`))
+                        if (readed.length > 0) {
+                            let line = '#;EmoteFullForm;Name;Occurrences;\n';
+
+                            readed.forEach((e, i) => {
+                                line += `${i+1};${e.emote};${e.emote.split(':')[1]};${e.occurrances};\n`
+                            });
+
+                            let file = new MessageAttachment(Buffer.from(line,'utf8'), `emote_statistics_${message.guild.id}_${Date.now()}.csv`);
+                            message.channel.send({files: [file]})
+                        }
+                        else {
+                            message.reply({content: L.EmoteStatsNoData});
+                        }
+                    }
+                    else {
+                        message.reply({content: L.EmoteStatsNoData});
                     }
                     break;
             }

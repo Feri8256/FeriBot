@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 module.exports = {
     name: 'rob',
     categories: ['fun', 'games'],
@@ -19,12 +19,12 @@ module.exports = {
         let robTargetCookies = parseInt(DataMgr.Read(`./data/${guildID}/coin`, robTargetUser.id) ?? 0);
         if (robTargetCookies < 500) return message.reply({ content: 'Nem éri meg kirabolni ezt a felhasználót!' });
 
+        fs.ensureDir(`./data/${guildID}/robs`, 0o2775);
         let robbedDataExists = fs.existsSync(`./data/${guildID}/robs/${robberUser.id}.json`);
 
-        function saveRobData(robber, robbed, date) {
-            //Betölt
-            let dataExists = fs.existsSync(`./data/${guildID}/robs/${robber}.json`);
-            let loaded = dataExists ? JSON.parse(fs.readFileSync(`./data/${guildID}/robs/${robber}.json`)) : [];
+        function saveRobData(robber, robbed, date) {     
+            let check = fs.pathExistsSync(`./data/${guildID}/robs/${robber}.json`);
+            let loaded = check ? JSON.parse(fs.readFileSync(`./data/${guildID}/robs/${robber}.json`)) : [];
             //Keres
             let found = loaded.find(r => r.robbed === robbed);
             //Hozzáad/módosít
@@ -36,6 +36,7 @@ module.exports = {
             }
             //mentés
             fs.writeFileSync(`./data/${guildID}/robs/${robber}.json`, JSON.stringify(loaded));
+            
         }
 
         function saveNewCookies(robberUser, robberValue, robbedUser, robbedValue) {
@@ -44,15 +45,18 @@ module.exports = {
         }
 
         function performRob() {
-            let range = Math.round(robTargetCookies / 2);
-            let gain = Math.floor( Math.random() * range);
+            //20-50%
+            let minimum = 0.2;
+            let maximum = 0.5;
+            let gain = Math.random() * (maximum - minimum) + minimum;
+            let range = Math.round(robTargetCookies * (gain/10));
 
-            let robberNew = robberUserCookies + gain;
-            let robbedNew = robTargetCookies - gain;
+            let robberNew = robberUserCookies + range;
+            let robbedNew = robTargetCookies - range;
 
             saveRobData(robberUser.id, robTargetUser.id, dateNow);
             saveNewCookies(robberUser.id, robberNew, robTargetUser.id, robbedNew);
-            message.reply({content: `**${robTargetUser.tag}** -tól/-től sikerült elcsenni **${gain}** kekszet!\nEzzel már **${robberNew}** kekszed van!`});
+            message.reply({content: `**${robTargetUser.tag}** -tól/-től sikerült elcsenni **${range}** kekszet!\nEzzel már **${robberNew}** kekszed van!`});
         }
 
         if (robbedDataExists) {
