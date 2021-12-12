@@ -7,7 +7,7 @@ module.exports = {
     usage: ['<@Rang>', '<@Role>'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
         let guildID =   message.guild.id;
-        let myRole = message.guild.members.cache.get(client.user).roles.highest;
+        let myRole = message.guild.me.roles.highest;
 
         //if(message.member.hasPermission('MANAGE_ROLES')){
             switch(args[1]){

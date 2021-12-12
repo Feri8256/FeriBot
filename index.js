@@ -7,12 +7,17 @@ const Discord = require('discord.js');
 const client = new Discord.Client(
     {
         intents: [
-            Discord.Intents.FLAGS.GUILDS, 
-            Discord.Intents.FLAGS.GUILD_MESSAGES, 
+            Discord.Intents.FLAGS.GUILDS,
+            Discord.Intents.FLAGS.GUILD_MESSAGES,
             Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
             Discord.Intents.FLAGS.GUILD_MEMBERS,
             Discord.Intents.FLAGS.GUILD_PRESENCES,
-            Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+            Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+        ],
+        partials: [
+            'MESSAGE',
+            'REACTION',
+            'USER'
         ]
     }
 );
@@ -96,7 +101,7 @@ client.wordGamePlayerHints = new Map();
 client.on('ready', () => {
     console.clear();
     console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nÜzenet parancsok: ${client.messageCommands.size}\nSlash parancsok: ${client.slashCommands.size}`);
-    client.user.setActivity(`👀 ${prefix}help | /`, {type: 'WATCHING'});
+    client.user.setActivity(`👀 ${prefix}help | /`, { type: 'WATCHING' });
     slashUpdater(client, client.slashCommandsBody);
 });
 
@@ -122,11 +127,11 @@ client.on('guildMemberRemove', async member => {
 });
 
 //Reakciót érzékel (csak cache-elt üzenetnél)
-client.on('messageReactionAdd', reaction => {
+client.on('messageReactionAdd', async (reaction) => {
     emoteStatCollector(false, reaction);
 });
 
-function CmdExecuted () {
+function CmdExecuted() {
     client.ExecutedCmdCount++;
 }
 
@@ -136,7 +141,7 @@ client.on('messageCreate', async message => {
     if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
     if (message.author.bot) return; //Ha az üzenet küldője bot, akkor ne csinálj semmit!
     if (message.author.id === client.user.id) return; //Ha az üzenet küldője maga a bot, akkor se csinálj semmit! Bár, az előző feltételvizsgálatnál véget kell hogy érjen
-    
+
     let Ls = findLanguage(client, message.guild.id);
     let L = Language[Ls];
 
@@ -166,7 +171,7 @@ client.on('messageCreate', (message) => {
     //Egy parancs lefuttatása előtt ki kell azt nyernünk a "client.cmds" collection-ból.
     //Ez kétféleképpen történhet: a neve, vagy egy alias alapján, amit meg kell persze keresni...
     let chkCmd = client.messageCommands.get(args[0].toLowerCase()) || client.messageCommands.find(c => c.aliases && c.aliases.includes(args[0].toLowerCase()));
-        
+
     //Ha a chkCmd null, akkor azt jelenti, nincs meg az, amit kerestünk...
     if (!chkCmd) {
         return;
@@ -180,7 +185,7 @@ client.on('messageCreate', (message) => {
             }
             else {
                 //Ha nincs joga, csak szólj, hogy nincs nyulkapiszka és return...
-                message.channel.send({embeds: [ErrMessages.W_UsrNoPermission(L)]});
+                message.channel.send({ embeds: [ErrMessages.W_UsrNoPermission(L)] });
                 return;
             }
         }
@@ -188,14 +193,14 @@ client.on('messageCreate', (message) => {
         //Ha cooldown-hoz van kötve a parancs
         if (chkCmd.cooldown && chkCmd.cooldown != undefined) {
             //Ha benne van egy felhasználó a listában, tudassa vele.
-            if(CoolDown.has(message.author.id)) {
-                message.channel.send({embeds: [ErrMessages.W_CooldownWait(L)]});
+            if (CoolDown.has(message.author.id)) {
+                message.channel.send({ embeds: [ErrMessages.W_CooldownWait(L)] });
             }
             //Egyébként futtassa le és adja hozzá a felhasználót a CoolDown-hoz, majd törölje x másodperc után
             else {
                 chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
                 CoolDown.add(message.author.id);
-                setTimeout(()=> { CoolDown.delete(message.author.id) }, variables.Default_cooldown);
+                setTimeout(() => { CoolDown.delete(message.author.id) }, variables.Default_cooldown);
             }
         }
 
