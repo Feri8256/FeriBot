@@ -1,5 +1,6 @@
 [
     {
+        "CommandsGeneralError":"Hiba történt! :(",
         "lang": "[HU] Magyar",
         "LangChangedSuccessfullyTo": "Nyelv sikeresen beállítva a következőre",
         "CurrentLang": "Jelenlegi nyelv",
@@ -205,6 +206,7 @@
         "WordGameWrongAndTries": "Nem talált! Még **{0}** próbálkozásod maradt."
     },
     {
+        "CommandsGeneralError":"Error! :(",
         "lang": "English",
         "LangChangedSuccessfullyTo": "Language successfully switched to",
         "CurrentLang": "Current language is",

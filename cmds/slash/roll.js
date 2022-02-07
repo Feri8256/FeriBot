@@ -5,9 +5,8 @@ module.exports = {
     },
 
     execute(Discord, client, interaction, options, L) {
-        let n = Math.floor( Math.random() * 101);
         interaction.reply({
-            content: String(n)
+            content: String(Math.floor( Math.random() * 101))
         });
     }
 }

@@ -1,13 +1,11 @@
 const { Permissions, MessageAttachment } = require('discord.js');
 const fs = require('fs');
-//const B = require('buffer');
 
 module.exports = {
     name: 'emote-statistics',
     aliases: ['emotestat','emotestats','emote-stats'],
     description: ['Figyeli a szerveren használt egyedi emotikonok használati gyakoriságát (reakciókban is).','Counts how many times a custom emote is used in the server (messages and reactions).'],
-    usage: ['[1/0/reset]','[1/0/reset]'],
-    //reqPerms: ['MANAGE_EMOJIS'],
+    usage: ['[1/0/reset/export]','[1/0/reset/export]'],
     categories: ['info'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
         var emoteStatsEmbed;
@@ -76,7 +74,7 @@ module.exports = {
                             });
 
                             let file = new MessageAttachment(Buffer.from(line,'utf8'), `emote_statistics_${message.guild.id}_${Date.now()}.csv`);
-                            message.channel.send({files: [file]})
+                            message.channel.send({files: [file]});
                         }
                         else {
                             message.reply({content: L.EmoteStatsNoData});

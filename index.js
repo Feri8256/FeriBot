@@ -3,8 +3,28 @@ const messageCommandsPath = './cmds/message';
 const slashCommandsPath = './cmds/slash';
 
 require('dotenv').config();
+const fs = require('fs');
+
+function logErrors(error) {
+    console.log(`[Error ${new Date()}] ${error}`);
+    fs.appendFileSync('./error.log', `[${new Date()}]\n${error.stack}\n\n`);
+}
+
+//Hibák globális kezelése
+process.on('unhandledRejection', (error) => {
+    logErrors(error);
+});
+
+process.on('warning', (w) => {
+    logErrors(error);
+});
+
+process.on('exit', (e) => {
+    fs.appendFileSync('./process_exit.log', `[${new Date()}]\nExit code: ${e}\n\n`);
+});
+
 const Discord = require('discord.js');
-const client = new Discord.Client(
+var client = new Discord.Client(
     {
         intents: [
             Discord.Intents.FLAGS.GUILDS,
@@ -22,6 +42,10 @@ const client = new Discord.Client(
     }
 );
 
+client.on('error', (error) => {
+    logErrors(error);
+});
+
 client.messageCommands = new Discord.Collection();
 client.slashCommands = new Discord.Collection();
 client.slashCommandsBody = [];
@@ -30,50 +54,35 @@ client.cachedLangSettings = new Map();
 client.ExecutedCmdCount = 0;
 
 const variables = require('./variables.json');
-const prefix = variables.Prefix;
-client.prefix = prefix
-const fs = require('fs-extra');
+client.prefix = variables.Prefix;
 const DataMgr = require('./dataManager');
 const findLanguage = require('./findLanguage');
 const Language = require('./languages.json');
 const slashUpdater = require('./updateSlashCommands');
 
 //Üzenet alapú parancs betöltő
-let msgCmdFiles = fs.readdirSync(messageCommandsPath);
-for (let fileName of msgCmdFiles) {
-    console.log(`${messageCommandsPath}/${fileName}`);
-    let rCmdF = require(`${messageCommandsPath}/${fileName}`);
-    client.messageCommands.set(rCmdF.name, rCmdF);
+function loadMsgCommands() {
+    let msgCmdFiles = fs.readdirSync(messageCommandsPath);
+    for (let fileName of msgCmdFiles) {
+        console.log(`${messageCommandsPath}/${fileName}`);
+        let rCmdF = require(`${messageCommandsPath}/${fileName}`);
+        client.messageCommands.set(rCmdF.name, rCmdF);
+    }
 }
 
 //Slash betöltő
-let slashCmdFiles = fs.readdirSync(slashCommandsPath);
-for (let fileName of slashCmdFiles) {
-    console.log(`${slashCommandsPath}/${fileName}`);
-    let loaded = require(`${slashCommandsPath}/${fileName}`);
-    client.slashCommands.set(loaded.commandData.name, loaded);
-    client.slashCommandsBody.push(loaded.commandData);
+function loadSlashCommands() {
+    let slashCmdFiles = fs.readdirSync(slashCommandsPath);
+    for (let fileName of slashCmdFiles) {
+        console.log(`${slashCommandsPath}/${fileName}`);
+        let loaded = require(`${slashCommandsPath}/${fileName}`);
+        client.slashCommands.set(loaded.commandData.name, loaded);
+        client.slashCommandsBody.push(loaded.commandData);
+    }
 }
 
-//Hibák globális kezelése
-process.on('unhandledRejection', (error) => {
-    console.log(`[Error ${new Date()}] ${error}`);
-    fs.appendFileSync('./error.log', `[${new Date()}]\n${error.stack}\n\n`);
-});
-
-client.on('error', (error) => {
-    console.log(`[Error ${new Date()}] ${error}`);
-    fs.appendFileSync('./error.log', `[${new Date()}]\n${error.stack}\n\n`);
-});
-
-process.on('warning', (w) => {
-    console.log(`[Warning ${new Date()}] ${w}`);
-    fs.appendFileSync('./error.log', `[${new Date()}]\n${w}\n\n`);
-});
-
-process.on('exit', (e) => {
-    fs.appendFileSync('./process_exit.log', `[${new Date()}]\nExit code: ${e}\n\n`);
-})
+loadMsgCommands();
+loadSlashCommands();
 
 //Automatizált parancsok
 const ErrMessages = require('./ErrorMessages');
@@ -86,7 +95,7 @@ const memberLeave = require('./auto/memberLeave');
 const pingMe = require('./auto/pingme');
 const shoutingDetector = require('./auto/shoutingMessageDetector');
 const emoteStatCollector = require('./auto/emoteStatCollector');
-const wordGameListen = require('./auto/WordGameListen')
+const wordGameListen = require('./auto/WordGameListen');
 
 const CoolDown = new Set();
 client.GuessGame = new Map();
@@ -101,7 +110,7 @@ client.wordGamePlayerHints = new Map();
 client.on('ready', () => {
     console.clear();
     console.log(`Csatlakozva: ${client.user.tag}\nEkkor: ${client.readyAt}\nSzerverek: ${client.guilds.cache.size}\nÜzenet parancsok: ${client.messageCommands.size}\nSlash parancsok: ${client.slashCommands.size}`);
-    client.user.setActivity(`👀 ${prefix}help | /`, { type: 'WATCHING' });
+    client.user.setActivity(`👀 ${client.prefix}help | /`, { type: 'WATCHING' });
     slashUpdater(client, client.slashCommandsBody);
 });
 
@@ -156,7 +165,7 @@ client.on('messageCreate', async message => {
 
 //Prefixes parancsok
 client.on('messageCreate', (message) => {
-    if (!message.content.startsWith(prefix)) return; //Ha az üzenet nem prefixel kezdődik, akkor ne csinálj semmit!
+    if (!message.content.startsWith(client.prefix)) return; //Ha az üzenet nem prefixel kezdődik, akkor ne csinálj semmit!
     if (message.guild === null) return; //Ha az üzenet DM-ként érkezik, akkor nincs guild, tehát ne csinálj semmit, különben hibával leállsz.
     if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
     if (message.author.bot) return; //Ha az üzenet küldője bot, akkor ne csinálj semmit!
@@ -166,7 +175,7 @@ client.on('messageCreate', (message) => {
     let L = Language[Ls];
 
     //Üzenet tartalmának szóközönkénti felosztása apróbb kezelhetőbb részekre
-    let args = message.content.substring(prefix.length).split(/ +/g);
+    let args = message.content.substring(client.prefix.length).split(/ +/g);
 
     //Egy parancs lefuttatása előtt ki kell azt nyernünk a "client.cmds" collection-ból.
     //Ez kétféleképpen történhet: a neve, vagy egy alias alapján, amit meg kell persze keresni...
@@ -177,38 +186,44 @@ client.on('messageCreate', (message) => {
         return;
     }
     else {
-        //Ha joghoz van kötve a parancs
-        if (chkCmd.reqPerms != undefined) {
-            if (message.member.permissions.has(chkCmd.reqPerms)) {
-                //Ha van joga, fogadj szót!...
+        try {
+            //Ha joghoz van kötve a parancs
+            if (chkCmd.reqPerms != undefined) {
+                if (message.member.permissions.has(chkCmd.reqPerms)) {
+                    //Ha van joga, fogadj szót!...
+                    chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
+                }
+                else {
+                    //Ha nincs joga, csak szólj, hogy nincs nyulkapiszka és return...
+                    message.channel.send({ embeds: [ErrMessages.W_UsrNoPermission(L)] });
+                    return;
+                }
+            }
+
+            //Ha cooldown-hoz van kötve a parancs
+            if (chkCmd.cooldown && chkCmd.cooldown != undefined) {
+                //Ha benne van egy felhasználó a listában, tudassa vele.
+                if (CoolDown.has(message.author.id)) {
+                    message.channel.send({ embeds: [ErrMessages.W_CooldownWait(L)] });
+                }
+                //Egyébként futtassa le és adja hozzá a felhasználót a CoolDown-hoz, majd törölje x másodperc után
+                else {
+                    chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
+                    CoolDown.add(message.author.id);
+                    setTimeout(() => { CoolDown.delete(message.author.id) }, variables.Default_cooldown);
+                }
+            }
+
+            //nincs se cooldown-hoz, se jogokhoz kötve a parancs
+            if (!chkCmd.reqPerms && !chkCmd.cooldown) {
                 chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
             }
-            else {
-                //Ha nincs joga, csak szólj, hogy nincs nyulkapiszka és return...
-                message.channel.send({ embeds: [ErrMessages.W_UsrNoPermission(L)] });
-                return;
-            }
+            CmdExecuted();
         }
-
-        //Ha cooldown-hoz van kötve a parancs
-        if (chkCmd.cooldown && chkCmd.cooldown != undefined) {
-            //Ha benne van egy felhasználó a listában, tudassa vele.
-            if (CoolDown.has(message.author.id)) {
-                message.channel.send({ embeds: [ErrMessages.W_CooldownWait(L)] });
-            }
-            //Egyébként futtassa le és adja hozzá a felhasználót a CoolDown-hoz, majd törölje x másodperc után
-            else {
-                chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
-                CoolDown.add(message.author.id);
-                setTimeout(() => { CoolDown.delete(message.author.id) }, variables.Default_cooldown);
-            }
+        catch (err) {
+            logErrors(err);
+            message.channel.send({ content: L.CommandsGeneralError });
         }
-
-        //nincs se cooldown-hoz, se jogokhoz kötve a parancs
-        if (!chkCmd.reqPerms && !chkCmd.cooldown) {
-            chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
-        }
-        CmdExecuted();
     }
 });
 
@@ -221,7 +236,15 @@ client.on('interactionCreate', (interaction) => {
 
     let chkCommand = client.slashCommands.get(commandName);
     if (!chkCommand) return;
-    chkCommand.execute(Discord, client, interaction, options, L);
+
+    try {
+        chkCommand.execute(Discord, client, interaction, options, L);
+    }
+    catch (err) {
+        logErrors(err);
+        interaction.reply({ content: L.CommandsGeneralError });
+    }
+
     CmdExecuted();
 });
 

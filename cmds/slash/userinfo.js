@@ -13,23 +13,21 @@ module.exports = {
     },
 
     execute(Discord, client, interaction, options, L) {
-        let { user, member } = options.getMember('user') ?? interaction;
-
-        if (user.bot) return interaction.reply({content: 'Botokról való információszerzés még nem támogatott'});
+        let member  = options.getMember('user') ?? interaction.member;
 
         let UserEmbed = new Discord.MessageEmbed()
-        UserEmbed.setColor('RANDOM')
-        UserEmbed.setThumbnail(user.avatarURL())
-        UserEmbed.setTitle(user.tag)
+        UserEmbed.setColor(member.roles.highest.hexColor)
+        UserEmbed.setThumbnail(member.user.avatarURL())
+        UserEmbed.setTitle(member.user.tag)
         UserEmbed.addFields(
-            { name: 'ID', value: user.id },
-            { name: L.UsrInfoAccountCreatedAt, value: String(user.createdAt) },
+            { name: 'ID', value: member.user.id },
+            { name: L.UsrInfoAccountCreatedAt, value: String(member.user.createdAt) },
             { name: L.UsrInfoJoinedAt, value: String(member.joinedAt) },
             { name: L.UsrInfoNickName, value: member.nickname ? member.nickname : L.NotDefined },
             { name: L.UsrInfoHighestRole, value: String(member.roles.highest) },
-            { name: 'bot?', value: user.bot ? L.YesTrue: L.NoFalse }
+            { name: 'bot?', value: member.user.bot ? L.YesTrue : L.NoFalse }
         )
         
         interaction.reply({ embeds: [UserEmbed] });
-    }
+    }   
 }

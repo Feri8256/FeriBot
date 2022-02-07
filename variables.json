@@ -2,7 +2,7 @@
     "Prefix":"f/",
     "Default_cooldown":5000,
     "Emoji_BaseUrl":"https://cdn.discordapp.com/emojis/",
-    "Bot_invite":"https://discord.com/api/oauth2/authorize?client_id=697160467914948738&permissions=2416241734&scope=bot",
+    "Bot_invite":"https://discord.com/api/oauth2/authorize?client_id=697160467914948738&permissions=2416306246&scope=bot",
     "Bot_support_server_invite":"https://discord.gg/WZZGjB3",
 
     "Hug_GIF_API":"https://v2.api.acsanad.net/images/hug",
