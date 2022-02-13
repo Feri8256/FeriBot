@@ -7,8 +7,8 @@ module.exports = {
         description: 'Mém...'
     },
 
-    async execute (Discord, client, interaction, options, L) {
-        await interaction.deferReply();
+    execute (Discord, client, interaction, options, L) {
+        interaction.deferReply();
         function memeReady(d) {
             let MemeEmbed = new Discord.MessageEmbed()
             MemeEmbed.setColor('RANDOM')

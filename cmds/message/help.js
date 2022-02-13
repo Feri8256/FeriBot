@@ -4,54 +4,62 @@ module.exports = {
     name: 'help',
     aliases: ['commands', 'parancsok', 'segítség'],
     execute(Discord, client, message, args, L, DataMgr, ErrMessages) {
-        let ArrOfCmds = [...client.messageCommands.values()];
+        let prefix = client.prefix;
+        let arrOfCmds = [...client.messageCommands.values()];
+        let categoryList = [...new Set([].concat(...arrOfCmds.map((value)=> value.categories)))];
 
         let langSetting = findLanguage(client, message.guild.id);
         if (!args[1]) {
             //Kategóriák listája
-            let HelpCategories = new Discord.MessageEmbed()
-            HelpCategories.setTitle(L.HelpTitle)
-            HelpCategories.setColor('#f7f7f7')
-            HelpCategories.setDescription(L.HelpText1)
-            HelpCategories.addFields(
-                { name: L.HelpCategoriesTitle, value: `\`${client.prefix}help animals\`\n\`${client.prefix}help fun\`\n\`${client.prefix}help games\`\n\`${client.prefix}help mod\`\n\`${client.prefix}help info\`\n\`${client.prefix}help misc\`` },
-                { name: 'More about language setting:', value: `\`${client.prefix}language\`` },
+            let categoryListString = "";
+            for (c of categoryList) {
+                if (!c) continue;
+                categoryListString += `\`${prefix}help ${c}\`\n`;
+            } 
+
+            let helpCategories = new Discord.MessageEmbed()
+            helpCategories.setTitle(L.HelpTitle)
+            helpCategories.setColor('#f7f7f7')
+            helpCategories.setDescription(L.HelpText1)
+            helpCategories.addFields(
+                { name: L.HelpCategoriesTitle, value: categoryListString },
+                { name: 'More about language setting:', value: `\`${prefix}language\`` },
                 { name: L.BotInvitesText, value: `[${L.BotInviteTextLink}](${variables.Bot_invite})${variables.Bot_support_server_invite ? ` • [${L.BotSupportServerTextLink}](${variables.Bot_support_server_invite})` : ''}` },
             )
-            HelpCategories.setFooter(`${ArrOfCmds.length} ${L.CmdModuleCount}`)
-            message.channel.send({embeds: [HelpCategories]})
+            helpCategories.setFooter(`${arrOfCmds.length} ${L.CmdModuleCount}`)
+            message.channel.send({embeds: [helpCategories]})
         }
         else {
-            let CategoryName = args[1].toLowerCase();
-            let CategoryArr = ArrOfCmds.filter(elem => elem.categories && elem.categories.includes(CategoryName));
-            let CategoryL = CategoryArr.length;
+            let categoryName = args[1].toLowerCase();
+            let categoryArr = arrOfCmds.filter(elem => elem.categories && elem.categories.includes(categoryName));
+            let categoryL = categoryArr.length;
 
-            if (CategoryL === 0) {
+            if (categoryL === 0) {
                 message.reply({content: L.UnknownHelpCategory})
                 return;
             }
 
-            let HelpCategoryEmbed = new Discord.MessageEmbed()
-            HelpCategoryEmbed.setColor('#f7f7f7')
-            HelpCategoryEmbed.setFooter(`[]: ${L.Optional} | <>: ${L.Required}`)
+            let helpCategoryEmbed = new Discord.MessageEmbed()
+            helpCategoryEmbed.setColor('#f7f7f7')
+            helpCategoryEmbed.setFooter(`[]: ${L.Optional} | <>: ${L.Required}`)
 
-            HelpCategoryEmbed.setTitle(`help 👉🏼 ${CategoryName} (${CategoryL})`)
+            helpCategoryEmbed.setTitle(`help 👉🏼 ${categoryName} (${categoryL})`)
             //Kategória mezőket létrehozza
-            for(var i=0; i<CategoryL; i++){
+            for(var i=0; i<categoryL; i++){
                 //parancs aliases mezőt létrehozza
-                let CmdAliases = `\`${client.prefix + CategoryArr[i].name}${CategoryArr[i].usage ? "" : "\`"}`;
-                if(CategoryArr[i].usage) CmdAliases += " "+CategoryArr[i].usage[langSetting]+"`";
+                let cmdAliases = `\`${prefix + categoryArr[i].name}${categoryArr[i].usage ? "" : "\`"}`;
+                if(categoryArr[i].usage) cmdAliases += " "+categoryArr[i].usage[langSetting]+"`";
                 let AliasL = 0;
-                if (CategoryArr[i].aliases) AliasL = CategoryArr[i].aliases.length;
+                if (categoryArr[i].aliases) AliasL = categoryArr[i].aliases.length;
                 for(var j=0; j<AliasL; j++) {
-                    CmdAliases += " • `";
-                    CmdAliases += `${client.prefix + CategoryArr[i].aliases[j]}${CategoryArr[i].usage ? "" : "\`"}`;
-                    if(CategoryArr[i].usage) CmdAliases += " "+CategoryArr[i].usage[langSetting]+"`";
+                    cmdAliases += " • `";
+                    cmdAliases += `${prefix + categoryArr[i].aliases[j]}${categoryArr[i].usage ? "" : "\`"}`;
+                    if(categoryArr[i].usage) cmdAliases += " "+categoryArr[i].usage[langSetting]+"`";
                 }
-                HelpCategoryEmbed.addField(CmdAliases, CategoryArr[i].description[langSetting])
+                helpCategoryEmbed.addField(cmdAliases, categoryArr[i].description[langSetting])
             }
             
-            message.channel.send({embeds: [HelpCategoryEmbed]});
+            message.channel.send({embeds: [helpCategoryEmbed]});
         }
     }
 }

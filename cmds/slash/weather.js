@@ -16,10 +16,12 @@ module.exports = {
     execute(Discord, client, interaction, options, L) {
         let cityName = options.getString('name-of-settlement');
 
+        interaction.deferReply();
+
         weather.find({ search: cityName, degreeType: 'C' }, function (err, result) {
             if (err) console.log(err);
 
-            if (result !== [] && result.length) {
+            if (!err && result !== [] && result.length) {
                 var WeatherInfo = result;
                 var CityLocation = WeatherInfo[0].location.name;
                 var CityTemp = WeatherInfo[0].current.temperature + ' °C';
@@ -42,10 +44,10 @@ module.exports = {
                 )
                 WeatherEmbed.setTimestamp();
 
-                interaction.reply({embeds: [WeatherEmbed]});
+                interaction.editReply({embeds: [WeatherEmbed]});
             }
             else {
-                interaction.reply({content: 'Hiba! (x_x)'});
+                interaction.editReply({content: 'Hiba! (x_x)'});
             }
         })
     }

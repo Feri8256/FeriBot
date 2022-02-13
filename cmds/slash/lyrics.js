@@ -17,7 +17,7 @@ module.exports = {
         interaction.deferReply()
         function lyricsReady(d) {
             if (d.error) {
-                message.channel.send({content: `❌ | ${d.error}`});
+                interaction.editReply({content: `❌ | ${d.error}`});
             }
             else {
                 let rawLyrics = d.lyrics;
