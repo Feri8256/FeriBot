@@ -52,10 +52,12 @@ module.exports = (message) => {
                 "Helló",
                 "Hali",
                 "Szia helló",
+                "Hellószia",
+                "Örvendek",
                 "Neked is"
             ];
 
-            let rdmWelcome = Math.floor(Math.random() * (welcomeText.length * 1));
+            let rdmWelcome = Math.floor(Math.random() * welcomeText.length);
             message.channel.send({content: `**${welcomeText[rdmWelcome]} ${message.author.username}!** 👋🏼😄`});
         }
     }

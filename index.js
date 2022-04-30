@@ -16,7 +16,7 @@ process.on('unhandledRejection', (error) => {
 });
 
 process.on('warning', (w) => {
-    logErrors(error);
+    //logErrors(error);
 });
 
 process.on('exit', (e) => {
@@ -98,13 +98,9 @@ const emoteStatCollector = require('./auto/emoteStatCollector');
 const wordGameListen = require('./auto/WordGameListen');
 
 const CoolDown = new Set();
-client.GuessGame = new Map();
-client.GuessTries = new Map();
-client.QuizGamePlayer = new Map();
-client.QuizGameLevel = new Map();
-client.wordGamePlayer = new Map();
-client.wordGamePlayerTries = new Map();
-client.wordGamePlayerHints = new Map();
+client.GuessGamePlayers = new Map();
+client.QuizGamePlayers = new Map();
+client.wordGamePlayers = new Map();
 
 //Készen állok!
 client.on('ready', () => {
@@ -135,7 +131,7 @@ client.on('guildMemberRemove', async member => {
     memberLeave(member, client, DataMgr);
 });
 
-//Reakciót érzékel (csak cache-elt üzenetnél)
+//Reakciót érzékel
 client.on('messageReactionAdd', async (reaction) => {
     emoteStatCollector(false, reaction);
 });
@@ -167,7 +163,7 @@ client.on('messageCreate', async message => {
 client.on('messageCreate', (message) => {
     if (!message.content.startsWith(client.prefix)) return; //Ha az üzenet nem prefixel kezdődik, akkor ne csinálj semmit!
     if (message.guild === null) return; //Ha az üzenet DM-ként érkezik, akkor nincs guild, tehát ne csinálj semmit, különben hibával leállsz.
-    if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
+    //if (!message.guild.available) return; //Ha az adott szerver nem elérhető, akkor ne is próbálkozz tovább
     if (message.author.bot) return; //Ha az üzenet küldője bot, akkor ne csinálj semmit!
     if (message.author.id === client.user.id) return; //Ha az üzenet küldője maga a bot, akkor se csinálj semmit! Bár, az előző feltételvizsgálatnál véget kell hogy érjen
 

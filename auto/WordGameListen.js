@@ -1,17 +1,13 @@
 module.exports = (client, message, DataMgr, L) => {
     let wgPlayerID = message.guild.id + message.author.id;
 
-    if (client.wordGamePlayer.has(wgPlayerID)) {
+    if (client.wordGamePlayers.has(wgPlayerID)) {
 
-        let wgPlayerData = client.wordGamePlayer.get(wgPlayerID);
-        let wgPlayerTries = client.wordGamePlayerTries.get(wgPlayerID);
-        let wgPlayerHints = client.wordGamePlayerHints.get(wgPlayerID);
+        let d = client.wordGamePlayers.get(wgPlayerID);
         let msgContent = message.content.toLowerCase();
 
-        function resetEverything (pid) {
-            client.wordGamePlayer.delete(pid);
-            client.wordGamePlayerTries.delete(pid);
-            client.wordGamePlayerHints.delete(pid);
+        function reset(pid) {
+            client.wordGamePlayers.delete(pid);
         }
 
         function calcReward (gid, pid, num) {
@@ -70,44 +66,43 @@ module.exports = (client, message, DataMgr, L) => {
  
         switch(msgContent) {
             case 'x':
-                resetEverything(wgPlayerID);
+                reset(wgPlayerID);
                 message.reply({content: L.WordGameExit});
                 break;
 
             case 'g':
-                message.reply({content: L.WordGameGiveUp.replace('{0}', wgPlayerData.normalWord)});
-                resetEverything(wgPlayerID);
+                message.reply({content: L.WordGameGiveUp.replace('{0}', d.normal)});
+                reset(wgPlayerID);
                 break;
 
             case 'h':
-                if (isNaN(wgPlayerHints) || wgPlayerHints <= 0) {
+                if (d.hints === 0) {
                     message.reply({content: L.WordGameNoHelping});
-                    client.wordGamePlayerHints.delete(wgPlayerID);
                 }
                 else {
-                    wgPlayerHints--
-                    message.reply({content: L.WordGameHelping.replace('{0}', giveRandomHint(wgPlayerData.normalWord)).replace('{1}', wgPlayerHints)});
-                    client.wordGamePlayerHints.set(wgPlayerID, wgPlayerHints);
+                    d.hints--;
+                    message.reply({content: L.WordGameHelping.replace('{0}', giveRandomHint(d.normal)).replace('{1}', d.hints)});
+                    client.wordGamePlayers.set(wgPlayerID, d);
                 }
                 break;
 
             default:
-                if (msgContent.length < wgPlayerData.normalWord.length-2 || msgContent.length > wgPlayerData.normalWord.length) return;
-                if (msgContent === wgPlayerData.normalWord.toLowerCase() && wgPlayerTries > 0) {
-                    let reward = wgPlayerTries * 10;
+                if (msgContent.length < d.normal.length-2 || msgContent.length > d.normal.length) return;
+                if (msgContent === d.normal.toLowerCase() && d.tries > 0) {
+                    let reward = d.tries * 10;
                     message.reply({content: L.WordGameCorrect.replace('{0}', reward)});
                     calcReward(message.guild.id, message.author.id, reward);
-                    resetEverything(wgPlayerID);
+                    reset(wgPlayerID);
                 }
                 else {
-                    wgPlayerTries--
-                    if(wgPlayerTries === 0) {
-                        message.reply({content: L.WordGameNoTriesAndCorrect.replace('{0}', wgPlayerData.normalWord)});
-                        resetEverything(wgPlayerID);
+                    d.tries--;
+                    if(d.tries === 0) {
+                        message.reply({content: L.WordGameNoTriesAndCorrect.replace('{0}', d.normal)});
+                        reset(wgPlayerID);
                     }
                     else {
-                        client.wordGamePlayerTries.set(wgPlayerID, wgPlayerTries);
-                        message.reply({content: L.WordGameWrongAndTries.replace('{0}', wgPlayerTries)});
+                        client.wordGamePlayers.set(wgPlayerID, d);
+                        message.reply({content: L.WordGameWrongAndTries.replace('{0}', d.tries)});
                     }
                         
                 }
