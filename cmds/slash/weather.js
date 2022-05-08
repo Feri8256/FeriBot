@@ -14,40 +14,39 @@ module.exports = {
         ]
     },
     execute(Discord, client, interaction, options, L) {
+        //interaction.deferReply();
         let cityName = options.getString('name-of-settlement');
-
-        interaction.deferReply();
 
         weather.find({ search: cityName, degreeType: 'C' }, function (err, result) {
             if (err) console.log(err);
 
             if (!err && result !== [] && result.length) {
-                var WeatherInfo = result;
-                var CityLocation = WeatherInfo[0].location.name;
-                var CityTemp = WeatherInfo[0].current.temperature + ' °C';
-                var CityWind = WeatherInfo[0].current.windspeed;
-                var WeatherIconUrl = WeatherInfo[0].current.imageUrl;
-                var CityHumidity = WeatherInfo[0].current.humidity + ' mg/m^3'; //Nem vagyok biztos a mértékegységben.
-                var CurrentDate = WeatherInfo[0].current.date;
-                var TempFeelslike = WeatherInfo[0].current.feelslike + ' °C';
+                let wInfo = result;
+                let cityName = wInfo[0].location.name;
+                let cityTemp = `${wInfo[0].current.temperature} °C`;
+                let cityWind = wInfo[0].current.windspeed;
+                let wIconUrl = wInfo[0].current.imageUrl;
+                let cityHumidity = `${wInfo[0].current.humidity} mg/m^3`; //Nem vagyok biztos a mértékegységben.
+                let currentDate = wInfo[0].current.date;
+                let tempFeelslike = `${wInfo[0].current.feelslike} °C`;
 
                 let WeatherEmbed = new Discord.MessageEmbed()
                 WeatherEmbed.setColor('#dddddd')
-                WeatherEmbed.setThumbnail(WeatherIconUrl)
-                WeatherEmbed.setTitle(`${L.WeatherCurrentHere}: ${CityLocation}`)
-                WeatherEmbed.setDescription(String(CurrentDate))
+                WeatherEmbed.setThumbnail(wIconUrl)
+                WeatherEmbed.setTitle(`${L.WeatherCurrentHere}: ${cityName}`)
+                WeatherEmbed.setDescription(String(currentDate))
                 WeatherEmbed.addFields(
-                    { name: L.WeatherTemp, value: String(CityTemp), inline: true },
-                    { name: L.WeatherWind, value: String(CityWind), inline: true },
-                    { name: L.WeatherHumidity, value: String(CityHumidity), inline: true },
-                    { name: L.WeatherTempFeels, value: String(TempFeelslike), inline: true }
+                    { name: L.WeatherTemp, value: String(cityTemp), inline: true },
+                    { name: L.WeatherWind, value: String(cityWind), inline: true },
+                    { name: L.WeatherHumidity, value: String(cityHumidity), inline: true },
+                    { name: L.WeatherTempFeels, value: String(tempFeelslike), inline: true }
                 )
                 WeatherEmbed.setTimestamp();
 
-                interaction.editReply({embeds: [WeatherEmbed]});
+                interaction.reply({embeds: [WeatherEmbed]});
             }
             else {
-                interaction.editReply({content: 'Hiba! (x_x)'});
+                interaction.reply({content: L.CommandsGeneralError});
             }
         })
     }
