@@ -1,6 +1,10 @@
 let nap = require('./module-daytime');
 const helloRegexp = /^h{1,}[ae]{1,}[ly]{1,}[ioó]{1,}/i;
 
+function rdm(max) {
+    return Math.floor(Math.random() * max);
+}
+
 const greet =  [
     'sziasztok',
     'sziasztok!',
@@ -20,19 +24,20 @@ const greet =  [
 
 module.exports = (message) => {
     let inputMsg    =   message.content.toLowerCase();
-    let randomThing;
 
-    if (message.content.startsWith('👀') || inputMsg.startsWith('hey')) {
-
-        randomThing = Math.floor(Math.random() * 4);
-        if (randomThing === 2) {
+    if (
+        message.content.startsWith('👀') || 
+        inputMsg.startsWith('hey') || 
+        inputMsg.includes('@everyone') || 
+        inputMsg.includes('@here')
+    ) {
+        if (rdm(2) === 1) {
             message.react('👀');
         }
     }
 
     if (message.content.startsWith('🤔')) {
-        randomThing = Math.floor(Math.random() * 4);
-        if (randomThing === 2) {
+        if (rdm(2) === 1) {
             message.react('🤔');
         }
     }
@@ -42,8 +47,7 @@ module.exports = (message) => {
     }
 
     if (greet.includes(inputMsg.toLowerCase()) || helloRegexp.test(inputMsg.toLowerCase())) {
-        randomThing = Math.floor(Math.random() * 2);
-        if (randomThing === 1) {
+        if (rdm(2) === 1) {
             const welcomeText = [
                 "Szia",
                 `Jó ${nap.getNapszak()} kívánok`,

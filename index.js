@@ -55,7 +55,7 @@ client.ExecutedCmdCount = 0;
 
 const variables = require('./variables.json');
 client.prefix = variables.Prefix;
-const DataMgr = require('./dataManager');
+const dMgr = require('./dataManager');
 const findLanguage = require('./findLanguage');
 const Language = require('./languages.json');
 const slashUpdater = require('./updateSlashCommands');
@@ -64,6 +64,8 @@ const slashUpdater = require('./updateSlashCommands');
 function loadMsgCommands() {
     let msgCmdFiles = fs.readdirSync(messageCommandsPath);
     for (let fileName of msgCmdFiles) {
+        if(fileName.startsWith('x_')) continue;
+
         console.log(`${messageCommandsPath}/${fileName}`);
         let rCmdF = require(`${messageCommandsPath}/${fileName}`);
         client.messageCommands.set(rCmdF.name, rCmdF);
@@ -74,6 +76,8 @@ function loadMsgCommands() {
 function loadSlashCommands() {
     let slashCmdFiles = fs.readdirSync(slashCommandsPath);
     for (let fileName of slashCmdFiles) {
+        if(fileName.startsWith('x_')) continue;
+
         console.log(`${slashCommandsPath}/${fileName}`);
         let loaded = require(`${slashCommandsPath}/${fileName}`);
         client.slashCommands.set(loaded.commandData.name, loaded);
@@ -87,7 +91,6 @@ loadSlashCommands();
 //Automatizált parancsok
 const ErrMessages = require('./ErrorMessages');
 const cmdReactionTo = require('./auto/reactions-to-messages');
-const cmdGuessGameProgress = require('./auto/GuessGameProgress');
 const cmdQuizGameListen = require('./auto/QuizGameListenV2');
 const autoRoleAction = require('./auto/autoRoleAction');
 const memberWelcome = require('./auto/memberWelcome');
@@ -98,8 +101,9 @@ const emoteStatCollector = require('./auto/emoteStatCollector');
 const wordGameListen = require('./auto/WordGameListen');
 
 const CoolDown = new Set();
-client.GuessGamePlayers = new Map();
-client.QuizGamePlayers = new Map();
+//client.guessGamePlayers = new Map();
+client.guessGamePlayers = new Set();
+client.quizGamePlayers = new Map();
 client.wordGamePlayers = new Map();
 
 //Készen állok!
@@ -112,23 +116,23 @@ client.on('ready', () => {
 
 //Eltávolítanak egy szerverről
 client.on('guildDelete', guild => {
-    DataMgr.RemoveDir(`./data/${guild.id}`);
+    dMgr.RemoveDir(`./data/${guild.id}`);
 });
 
 //Hozzáadnak egy szerverhez
 client.on('guildCreate', guild => {
-    DataMgr.CreateDir(`./data/${guild.id}`);
+    dMgr.CreateDir(`./data/${guild.id}`);
 });
 
 //Felhasználó csatlakozik egy szerverre
 client.on('guildMemberAdd', async member => {
-    autoRoleAction(member, DataMgr);
-    memberWelcome(member, client, DataMgr);
+    autoRoleAction(member, dMgr);
+    memberWelcome(member, client, dMgr);
 });
 
 //Felhasználó elhagy egy szervert
 client.on('guildMemberRemove', async member => {
-    memberLeave(member, client, DataMgr);
+    memberLeave(member, client, dMgr);
 });
 
 //Reakciót érzékel
@@ -150,13 +154,12 @@ client.on('messageCreate', async message => {
     let Ls = findLanguage(client, message.guild.id);
     let L = Language[Ls];
 
-    shoutingDetector(message, DataMgr);
+    shoutingDetector(message, dMgr);
     cmdReactionTo(message);
     pingMe(message, L, client);
     emoteStatCollector(message, false);
-    cmdGuessGameProgress(message, L, client, DataMgr);
-    cmdQuizGameListen(message, client, L, DataMgr, findLanguage);
-    wordGameListen(client, message, DataMgr, L);
+    cmdQuizGameListen(message, client, L, dMgr, findLanguage);
+    wordGameListen(client, message, dMgr, L);
 });
 
 //Prefixes parancsok
@@ -187,7 +190,7 @@ client.on('messageCreate', (message) => {
             if (chkCmd.reqPerms != undefined) {
                 if (message.member.permissions.has(chkCmd.reqPerms)) {
                     //Ha van joga, fogadj szót!...
-                    chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
+                    chkCmd.execute(Discord, client, message, args, L, dMgr, ErrMessages);
                 }
                 else {
                     //Ha nincs joga, csak szólj, hogy nincs nyulkapiszka és return...
@@ -204,7 +207,7 @@ client.on('messageCreate', (message) => {
                 }
                 //Egyébként futtassa le és adja hozzá a felhasználót a CoolDown-hoz, majd törölje x másodperc után
                 else {
-                    chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
+                    chkCmd.execute(Discord, client, message, args, L, dMgr, ErrMessages);
                     CoolDown.add(message.author.id);
                     setTimeout(() => { CoolDown.delete(message.author.id) }, variables.Default_cooldown);
                 }
@@ -212,7 +215,7 @@ client.on('messageCreate', (message) => {
 
             //nincs se cooldown-hoz, se jogokhoz kötve a parancs
             if (!chkCmd.reqPerms && !chkCmd.cooldown) {
-                chkCmd.execute(Discord, client, message, args, L, DataMgr, ErrMessages);
+                chkCmd.execute(Discord, client, message, args, L, dMgr, ErrMessages);
             }
             CmdExecuted();
         }
@@ -224,6 +227,11 @@ client.on('messageCreate', (message) => {
 });
 
 //Slash
+/*client.on('interactionCreate', (interaction) => {
+    if (!interaction.isButton()) return;
+    console.log(interaction.component);
+});*/
+
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isCommand()) return;
     const { commandName, options } = interaction;
@@ -234,7 +242,7 @@ client.on('interactionCreate', (interaction) => {
     if (!chkCommand) return;
 
     try {
-        chkCommand.execute(Discord, client, interaction, options, L);
+        chkCommand.execute(Discord, client, interaction, options, L, dMgr);
     }
     catch (err) {
         logErrors(err);

@@ -18,9 +18,6 @@ exports.Read = (path, key) => {
             return DataString;
         }
     }
-    else{
-        new Error('(Read) Nincs útvonal vagy kulcs megadva');
-    }
 }
 
 /**
@@ -39,8 +36,34 @@ exports.Write = (path, key, value) => {
             fs.writeFileSync(path+"/"+key, value.toString());
         }
     }
-    else{
-        new Error('(Write) Nincs útvonal, kulcs, vagy íradndó adat megadva');
+}
+
+/**
+ * Tárolt szám érték módosítása. Ha még nem létezik, akkor létrehozza azt. Meglévő állomány tartalmát teljesen felülírja!
+ * @param {String} path Hová?
+ * @param {String} key Mibe?
+ * @param {Number} value Mennyit?
+ */
+exports.AddToNumber = (path, key, value) => {
+    function s(p, k, v) {
+        let prevStr = fs.readFileSync(p+"/"+k).toString();
+        let prevNum = parseInt(prevStr);
+
+        if (isNaN(v) || isNaN(prevNum)) return;
+
+        prevNum += v;
+
+        fs.writeFileSync(p+"/"+k, prevNum.toString());
+    }
+
+    if(path && key && value){
+        if(fs.pathExistsSync(path+"/")){
+            s(path, key, value);
+        }
+        else{
+            fs.ensureDir(path, 0o2775);
+            s(path, key, value);
+        }
     }
 }
 
@@ -56,12 +79,6 @@ exports.Delete = (path, key) => {
         if(fs.existsSync(fullPath)){
             fs.unlinkSync(fullPath);
         }
-        else{
-            new Error('(Delete) Az adott útvonal nem létezik: '+fullPath);
-        }
-    }
-    else{
-        new Error('(Delete) Nincs útvonal vagy kulcs megadva');
     }
 }
 
@@ -114,8 +131,5 @@ exports.Append = (path, key, value) => {
             fs.ensureDir(path, 0o2775);
             fs.appendFileSync(path+"/"+key, value.toString());
         }
-    }
-    else{
-        new Error('(Append) Nincs útvonal, kulcs, vagy íradndó adat megadva');
     }
 }

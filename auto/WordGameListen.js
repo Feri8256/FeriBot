@@ -4,6 +4,7 @@ module.exports = (client, message, DataMgr, L) => {
     if (client.wordGamePlayers.has(wgPlayerID)) {
 
         let d = client.wordGamePlayers.get(wgPlayerID);
+
         let msgContent = message.content.toLowerCase();
 
         function reset(pid) {
@@ -11,39 +12,28 @@ module.exports = (client, message, DataMgr, L) => {
         }
 
         function calcReward (gid, pid, num) {
-            let r = DataMgr.Read(`./data/${gid}/coin`, pid);
-            let c;
-            if (!r) {
-                c = 0;
-            }
-            else {
-                c = parseInt(r);
-            }
-            DataMgr.Write(`./data/${gid}/coin`, pid, c + num);
+            DataMgr.AddToNumber(`./data/${gid}/coin`, pid, num);
         }
 
         function giveRandomHint(normalW) {
             let WL = normalW.length;
             let outStr = '';
-            let rHint = Math.floor(Math.random() * 7);
+            let rHint = Math.floor(Math.random() * 3);
 
             switch (rHint) {
-                case 1:
-                case 4:
+                case 0:
                     for (let i = 0; i < WL; i++) {
                         outStr += i+2 > Math.round(WL / 2) ? '-' : normalW.charAt(i);
                     }
                     break;
 
-                case 2:
-                case 5:
+                case 1:
                     for (let i = 0; i < WL; i++) {
                         outStr += i-1 < WL / 2 ? '-' : normalW.charAt(i);
                     }
                     break;
 
-                case 0:
-                case 7:
+                case 2:
                     for (let i = 0; i < WL; i++) {
                         let r = Math.floor(Math.random() * 4);
                         outStr += r === 2 ? normalW.charAt(i) : '-';
@@ -51,7 +41,6 @@ module.exports = (client, message, DataMgr, L) => {
                     break;
 
                 case 3:
-                case 6:
                     for (let i = 0; i < WL; i++) {
                         let r = Math.floor(Math.random() * 3);
                         outStr += r === 2 ? normalW.charAt(i) : '-';
@@ -81,7 +70,11 @@ module.exports = (client, message, DataMgr, L) => {
                 }
                 else {
                     d.hints--;
-                    message.reply({content: L.WordGameHelping.replace('{0}', giveRandomHint(d.normal)).replace('{1}', d.hints)});
+
+                    let matchCheck = giveRandomHint(d.normal);
+                    while (matchCheck === d.normal) matchCheck = giveRandomHint(d.normal);
+
+                    message.reply({content: L.WordGameHelping.replace('{0}', matchCheck).replace('{1}', d.hints)});
                     client.wordGamePlayers.set(wgPlayerID, d);
                 }
                 break;
@@ -107,5 +100,7 @@ module.exports = (client, message, DataMgr, L) => {
                         
                 }
         }
+
+
     }
 }

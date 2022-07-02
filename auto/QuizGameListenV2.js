@@ -1,39 +1,32 @@
 const fs = require('fs');
 const QuizGameAsk = require('./QuizGameAsk');
-const AnswerMap = { 'a':0, 'b':1, 'c':2, 'd':3 };
+const answerMap = { 'a':0, 'b':1, 'c':2, 'd':3 };
 module.exports = (message, client, L, DataMgr, findLanguage) => {
-    if (client.QuizGamePlayers.has(message.author.id + message.channel.id)) {
-        let langSetting = findLanguage(client, message.guild.id);
-//////////
-        let MsgLowerCase = message.content.toLowerCase();
+    let playerId = message.author.id + message.channel.id;
 
-        switch (MsgLowerCase) {
+    if (client.QuizGamePlayers.has(playerId)) {
+        let msgLC = message.content.toLowerCase();
+        let playersMap = client.quizGamePlayers;
+
+        switch (msgLC) {
             case 'cancel':
             case 'giveup':
             case 'exit':
-                client.QuizGamePlayers.delete(message.author.id + message.channel.id);
+                playersMap.delete(playerId);
                 message.reply({content: L.QuizCancel}); //Feladja
                 break;
 
             default:
-                if (AnswerMap[MsgLowerCase] !== undefined) {
-                    let d = client.QuizGamePlayers.get(message.author.id + message.channel.id);
-                    let AnswerIndex = AnswerMap[MsgLowerCase];
+                if (answerMap[msgLC] !== undefined) {
+                    let d = playersMap.get(playerId);
+                    let AnswerIndex = answerMap[msgLC];
 
                     if (d.question.possibleAnswers[AnswerIndex].correct) {
                         d.level++;
                         message.reply({content: `☑ ${L.QuizCorrectAnswer} (**+10** 🍪)`}); //helyes
 
-                        let TestRead = DataMgr.Read(`./data/${message.guild.id}/coin`, message.author.id);
-                        let CoinBefore;
-                        if (!TestRead) {
-                            CoinBefore = 0;
-                        }
-                        else {
-                            CoinBefore = parseInt(TestRead);
-                        }
-                        DataMgr.Write(`./data/${message.guild.id}/coin`, message.author.id, CoinBefore + 10);
-                        client.QuizGamePlayers.set(message.author.id + message.channel.id, d);
+                        DataMgr.AddToNumber(`./data/${message.guild.id}/coin`, message.author.id, 10);
+                        playersMap.set(playerId, d);
 
                         QuizGameAsk(message, client, L, DataMgr, findLanguage);
                     }
@@ -42,7 +35,7 @@ module.exports = (message, client, L, DataMgr, findLanguage) => {
                         let CorrectAnswerIndex = d.question.possibleAnswers.findIndex(element => element.correct);
 
                         message.reply({content: `❌ ${L.QuizWrongAnswer.replace('{0}', d.question.possibleAnswers[CorrectAnswerIndex].answerText)}`}); //Helytelen
-                        client.QuizGamePlayers.delete(message.author.id + message.channel.id);
+                        playersMap.delete(playerId);
                     }
                 }
                 
