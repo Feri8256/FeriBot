@@ -133,3 +133,11 @@ exports.Append = (path, key, value) => {
         }
     }
 }
+
+exports.ReadJSON = () => {
+
+}
+
+exports.WriteJSON = () => {
+    
+}

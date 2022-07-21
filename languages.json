@@ -195,7 +195,10 @@
         "WordGameHelping": "Rendben, segítek: `{0}`\n**{1}** segítség maradt.",
         "WordGameCorrect": "Eltaláltad!\nA jutalmad: **{0}** 🍪",
         "WordGameNoTriesAndCorrect": "Elfogytak a lehetőségek\nA szó ez lett volna: `{0}`",
-        "WordGameWrongAndTries": "Nem talált! Még **{0}** próbálkozásod maradt."
+        "WordGameWrongAndTries": "Nem talált! Még **{0}** próbálkozásod maradt.",
+        "RobNotWorth":"Nem éri meg kirabolni ezt a felhasználót!",
+        "RobNotOneDay":"Nem járt még le 1 nap ezen felhasználó utolsó rablása óta!",
+        "RobSuccess":"**%1**-tól/től sikerült elcsenni **%0** kekszet!\nEzzel már **%2** kekszed van!"
     },
     {
         "CommandsGeneralError":"Error! :(",
@@ -388,6 +391,9 @@
         "WordGameHelping": "Alright... Is this helps: `{0}` ?\n**{1}** hints left.",
         "WordGameCorrect": "Great job! You found out the correct word!\nYour reward: **{0}** 🍪",
         "WordGameNoTriesAndCorrect": "No more attempts left!\nThe correct word was: `{0}`",
-        "WordGameWrongAndTries": "Nope! **{0}** tries left."
+        "WordGameWrongAndTries": "Nope! **{0}** tries left.",
+        "RobNotWorth":"Not worth robbing this user!",
+        "RobNotOneDay":"You have to wait **1 day** to rob this user again!",
+        "RobSuccess":"**%0** cookies stolen from **%1**!\nNow you have **%2**!"
     }
 ]

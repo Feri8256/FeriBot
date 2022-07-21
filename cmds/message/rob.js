@@ -17,7 +17,7 @@ module.exports = {
         
         let robberUserCookies = parseInt(DataMgr.Read(`./data/${guildID}/coin`, robberUser.id) ?? 0);
         let robTargetCookies = parseInt(DataMgr.Read(`./data/${guildID}/coin`, robTargetUser.id) ?? 0);
-        if (robTargetCookies < 500) return message.reply({ content: 'Nem éri meg kirabolni ezt a felhasználót!' });
+        if (robTargetCookies < 500) return message.reply({ content: L.RobNotWorth });
 
         fs.ensureDir(`./data/${guildID}/robs`, 0o2775);
         let robbedDataExists = fs.existsSync(`./data/${guildID}/robs/${robberUser.id}.json`);
@@ -56,7 +56,7 @@ module.exports = {
 
             saveRobData(robberUser.id, robTargetUser.id, dateNow);
             saveNewCookies(robberUser.id, robberNew, robTargetUser.id, robbedNew);
-            message.reply({content: `**${robTargetUser.tag}** -tól/-től sikerült elcsenni **${range}** kekszet!\nEzzel már **${robberNew}** kekszed van!`});
+            message.reply({content: L.RobSuccess.replace("%0", range).replace("%1", robTargetUser.tag).replace("%2", robberNew)});
         }
 
         if (robbedDataExists) {
@@ -65,7 +65,7 @@ module.exports = {
             //Fura megoldás, de teszi a dolgát
             let robbedDate = new Date(foundRobbedUser ? dateNow - foundRobbedUser.date : 86400000).getTime();
             //86400000 ms = 1 nap
-            if (robbedDate < 86400000 && robTargetUser.id === foundRobbedUser.robbed) return message.reply({ content: 'Nem járt le a 24 órád ezen felhasználó utolsó rablása óta!' });
+            if (robbedDate < 86400000 && robTargetUser.id === foundRobbedUser.robbed) return message.reply({ content: L.RobNotOneDay });
             else performRob();
         }
         else {

@@ -4,7 +4,7 @@ const answerMap = { 'a':0, 'b':1, 'c':2, 'd':3 };
 module.exports = (message, client, L, DataMgr, findLanguage) => {
     let playerId = message.author.id + message.channel.id;
 
-    if (client.QuizGamePlayers.has(playerId)) {
+    if (client.quizGamePlayers.has(playerId)) {
         let msgLC = message.content.toLowerCase();
         let playersMap = client.quizGamePlayers;
 

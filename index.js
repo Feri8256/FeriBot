@@ -101,7 +101,6 @@ const emoteStatCollector = require('./auto/emoteStatCollector');
 const wordGameListen = require('./auto/WordGameListen');
 
 const CoolDown = new Set();
-//client.guessGamePlayers = new Map();
 client.guessGamePlayers = new Set();
 client.quizGamePlayers = new Map();
 client.wordGamePlayers = new Map();
