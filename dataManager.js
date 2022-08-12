@@ -13,9 +13,8 @@ exports.Read = (path, key) => {
     if(path && key){
         fullPath    =   path+"/"+key;
         if(fs.existsSync(fullPath)){
-            let DataBuffer  =   fs.readFileSync(fullPath);
-            let DataString  =   DataBuffer.toString();
-            return DataString;
+            let data  =   fs.readFileSync(fullPath).toString();
+            return data;
         }
     }
 }
@@ -46,7 +45,7 @@ exports.Write = (path, key, value) => {
  */
 exports.AddToNumber = (path, key, value) => {
     function s(p, k, v) {
-        let prevStr = fs.readFileSync(p+"/"+k).toString();
+        let prevStr = fs.existsSync(p+"/"+k) ? fs.readFileSync(p+"/"+k).toString() : "0";
         let prevNum = parseInt(prevStr);
 
         if (isNaN(v) || isNaN(prevNum)) return;

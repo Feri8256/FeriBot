@@ -19,6 +19,9 @@ module.exports = (client, message, DataMgr, L) => {
             let WL = normalW.length;
             let outStr = '';
             let rHint = Math.floor(Math.random() * 3);
+            // Ne adja egymás után ugyan azokat a segítségeket, mert az nem igazán segítség
+            while (d.usedHints.includes(rHint)) rHint = Math.floor(Math.random() * 3);
+            d.usedHints.push(rHint);
 
             switch (rHint) {
                 case 0:
@@ -82,20 +85,20 @@ module.exports = (client, message, DataMgr, L) => {
             default:
                 if (msgContent.length < d.normal.length-2 || msgContent.length > d.normal.length) return;
                 if (msgContent === d.normal.toLowerCase() && d.tries > 0) {
-                    let reward = d.tries * 10;
+                    let reward = d.score - (d.tries - d.usedHints.length)*10;
                     message.reply({content: L.WordGameCorrect.replace('{0}', reward)});
                     calcReward(message.guild.id, message.author.id, reward);
                     reset(wgPlayerID);
                 }
                 else {
-                    d.tries--;
-                    if(d.tries === 0) {
+                    d.tries++;
+                    if(d.tries === d.maxTries) {
                         message.reply({content: L.WordGameNoTriesAndCorrect.replace('{0}', d.normal)});
                         reset(wgPlayerID);
                     }
                     else {
                         client.wordGamePlayers.set(wgPlayerID, d);
-                        message.reply({content: L.WordGameWrongAndTries.replace('{0}', d.tries)});
+                        message.reply({content: L.WordGameWrongAndTries.replace('{0}', d.maxTries - d.tries)});
                     }
                         
                 }

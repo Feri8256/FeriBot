@@ -10,20 +10,24 @@ module.exports = {
             message.reply({content: L.WordGameNewNo});
         }
         else {
-            let wordList = require(`../../json/words-${findLanguage(client, message.guild.id)}.json`);
+            let l = findLanguage(client, message.guild.id);
+            let wordList = require(`../../json/words-${l}.json`);
             let rdmWordNum = Math.floor(Math.random() * wordList.length);
             let word = wordList[rdmWordNum];
     
             let playerObject = {
                 normal: word,
                 shuffled: arrShuffle(word).join(''),
-                tries: Math.round(word.length / 2),
-                hints: Math.round(word.length / 5)
+                score: Math.round(word.length / 2) * 10,
+                maxTries: Math.round(word.length / 2),
+                tries: 0,
+                hints: Math.round(word.length / 4),
+                usedHints: []
             }
     
             client.wordGamePlayers.set(playerID, playerObject);
     
-            message.reply({content: L.WordGameStart.replace('{0}',playerObject.shuffled).replace('{1}', playerObject.tries).replace('{2}', playerObject.hints)});
+            message.reply({content: L.WordGameStart.replace('{0}',playerObject.shuffled).replace('{1}', playerObject.maxTries).replace('{2}', playerObject.hints)});
         }
     }
 }
