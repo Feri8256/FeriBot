@@ -5,7 +5,7 @@ module.exports = (client, message, DataMgr, L) => {
 
         let d = client.wordGamePlayers.get(wgPlayerID);
 
-        let msgContent = message.content.toLowerCase();
+        let msgContent = message.content.toLowerCase().trim();
 
         function reset(pid) {
             client.wordGamePlayers.delete(pid);
@@ -84,7 +84,7 @@ module.exports = (client, message, DataMgr, L) => {
 
             default:
                 if (msgContent.length < d.normal.length-2 || msgContent.length > d.normal.length) return;
-                if (msgContent === d.normal.toLowerCase() && d.tries > 0) {
+                if (msgContent === d.normal.toLowerCase().trim() && d.maxTries > d.tries) {
                     let reward = d.score - (d.tries - d.usedHints.length)*10;
                     message.reply({content: L.WordGameCorrect.replace('{0}', reward)});
                     calcReward(message.guild.id, message.author.id, reward);
